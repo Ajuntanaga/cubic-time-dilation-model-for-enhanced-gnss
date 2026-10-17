@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cubic Time Dilation — Module VI | Chronowave Dynamics</title>
+<meta name="description" content="Module VI of the Chronowave Dynamics Temporal Engine: the cubic (−1/3) versus traditional (−1/2) time dilation exponent, tested against a live GNSS satellite array.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23070B14'/%3E%3Ctext x='32' y='44' font-family='serif' font-style='italic' font-size='34' fill='%23F5A83C' text-anchor='middle'%3Et%C2%B3%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+
+<style>
+/* ============================================================
+   CHRONOWAVE DYNAMICS · TEMPORAL ENGINE
+   phosphor cyan → thermal amber duotone over a deep time-field
+   ============================================================ */
+:root{
+  --field:      #070B14;
+  --field-2:    #0B1120;
+  --field-3:    #101830;
+  --ivory:      #EDE8DC;
+  --ivory-dim:  rgba(237,232,220,.62);
+  --ivory-faint:rgba(237,232,220,.38);
+  --cyan:       #59D6C9;
+  --cyan-dim:   rgba(89,214,201,.35);
+  --amber:      #F5A83C;
+  --amber-dim:  rgba(245,168,60,.35);
+  --hairline:   rgba(237,232,220,.12);
+  --serif: "STIX Two Text", "Times New Roman", serif;
+  --grot:  "Space Grotesk", system-ui, sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, monospace;
+  --max: 1140px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  background:var(--field); color:var(--ivory);
+  font-family:var(--serif); font-size:17px; line-height:1.72;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+::selection{background:var(--amber);color:var(--field)}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4.5vw,56px)}
+.eyebrow{
+  font-family:var(--grot);font-size:11px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--cyan);font-weight:500;display:flex;align-items:center;gap:14px;
+}
+.eyebrow::after{content:"";height:1px;flex:0 0 56px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.eyebrow .rn{color:var(--amber);letter-spacing:.14em}
+h2{font-family:var(--serif);font-weight:500;font-size:clamp(29px,4vw,44px);line-height:1.16;letter-spacing:-.01em;margin:18px 0 8px}
+h2 em{font-style:italic;color:var(--amber)}
+h3{font-family:var(--serif);font-weight:600;font-size:20px;margin:0 0 6px}
+.lede{font-size:clamp(17px,1.6vw,20px);color:var(--ivory-dim);max-width:none}
+p{color:var(--ivory-dim);max-width:none;margin-bottom:1.1em}
+p strong{color:var(--ivory);font-weight:600}
+section{padding:clamp(68px,9vh,120px) 0;position:relative}
+section + section{border-top:1px solid var(--hairline)}
+
+/* equation panels */
+.eq-panel{background:linear-gradient(180deg,var(--field-2),rgba(13,21,36,.6));border:1px solid var(--hairline);border-left:none;border-radius:10px;padding:26px 26px 22px;margin:26px 0;overflow:visible;position:relative;counter-increment:eqn}
+.eq-panel::after{content:"eq " counter(eqn,decimal-leading-zero);position:absolute;right:14px;bottom:8px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:rgba(237,232,220,.28)}
+.eq-panel{box-shadow:inset 3px 0 0 0 var(--cyan)}
+.eq-panel[data-tag*="ASSUMED" i]{box-shadow:inset 3px 0 0 0 rgba(232,110,204,.85)}
+.eq-panel[data-tag*="ASSUMED" i]::before{color:rgba(232,110,204,.9)}
+.eq-panel[data-tag*="MEASURED" i],.eq-panel[data-tag*="FITTED" i]{box-shadow:inset 3px 0 0 0 var(--amber)}
+.eq-panel[data-tag*="MEASURED" i]::before,.eq-panel[data-tag*="FITTED" i]::before{color:var(--amber)}
+.eq-panel::before{content:attr(data-tag);position:absolute;top:-9px;left:20px;font-family:var(--grot);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);background:var(--field);padding:0 10px;max-width:86%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eq{color:var(--ivory);font-size:18px;text-align:center}
+.eq .katex{font-size:1.08em}
+.eq .katex-display{margin:.35em 0}
+.eq-scroll{overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:rgba(89,214,201,.35) transparent}
+.eq-scroll::-webkit-scrollbar{height:5px}
+.eq-scroll::-webkit-scrollbar-thumb{background:rgba(89,214,201,.28);border-radius:3px}
+.eq-scroll::-webkit-scrollbar-track{background:transparent}
+.katex-fallback{font-family:var(--mono);font-size:13px;color:var(--cyan);white-space:pre-wrap}
+body{counter-reset:eqn}
+
+/* instrument chrome */
+.readout{font-family:var(--mono);font-size:12.5px;color:var(--cyan);letter-spacing:.03em}
+.readout b{color:var(--amber);font-weight:500}
+.panel{background:var(--field-2);border:1px solid var(--hairline);border-radius:12px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--hairline);font-family:var(--grot);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ivory-faint);flex-wrap:wrap}
+canvas.viz{display:block;width:100%;height:auto;background:radial-gradient(120% 100% at 50% 0%, rgba(89,214,201,.05), transparent 60%), var(--field-2)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:20px 30px;padding:18px 20px;border-top:1px solid var(--hairline)}
+.ctrl{min-width:170px;flex:1}
+.ctrl.narrow{min-width:130px;flex:0 1 180px}
+.ctrl label{display:flex;justify-content:space-between;gap:8px;font-family:var(--grot);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:8px}
+.ctrl label output{font-family:var(--mono);color:var(--amber);letter-spacing:0;text-transform:none;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--amber));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--ivory);border:2px solid var(--field);box-shadow:0 0 0 1.5px var(--cyan),0 0 12px rgba(89,214,201,.5)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--ivory);border:2px solid var(--field);box-shadow:0 0 0 1.5px var(--cyan)}
+input[type=range]:focus-visible{outline:2px solid var(--amber);outline-offset:6px}
+.btn{font-family:var(--grot);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:var(--field);background:var(--cyan);border:none;border-radius:100px;padding:11px 22px;cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s}
+.btn:hover{background:var(--amber);box-shadow:0 0 24px rgba(245,168,60,.35)}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible{outline:2px solid var(--ivory);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--cyan);border:1px solid var(--cyan-dim)}
+.btn.ghost:hover{color:var(--amber);border-color:var(--amber);box-shadow:none}
+.btn.live{background:var(--amber)}
+.btn.mini{padding:7px 14px;font-size:10.5px}
+.seg{display:inline-flex;border:1px solid var(--hairline);border-radius:100px;overflow:hidden;flex-wrap:wrap}
+.seg button{font-family:var(--grot);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:var(--ivory-faint);border:none;padding:9px 17px;cursor:pointer;transition:color .2s,background .2s}
+.seg button+button{border-left:1px solid var(--hairline)}
+.seg button[aria-pressed="true"]{background:var(--field-3);color:var(--amber)}
+.seg button:focus-visible{outline:2px solid var(--cyan);outline-offset:-3px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ivory-dim);background:transparent;border:1px solid var(--hairline);border-radius:100px;padding:6px 13px;cursor:pointer;transition:all .18s}
+.chip:hover{border-color:var(--cyan);color:var(--cyan)}
+.chip[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.08)}
+.chip:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* stat tiles */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--hairline);border-top:1px solid var(--hairline)}
+.stat{background:var(--field-2);padding:14px 18px}
+.stat .k{font-family:var(--grot);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ivory-faint)}
+.stat .v{font-family:var(--mono);font-size:14.5px;color:var(--cyan);margin-top:4px;word-break:break-all}
+.stat .v.warm{color:var(--amber)}
+
+/* nav */
+nav#tf-nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,11,20,.75);border-bottom:1px solid var(--hairline)}
+nav#tf-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:20px}
+.brand{font-family:var(--grot);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--ivory);text-decoration:none;font-weight:600;white-space:nowrap}
+.brand span{color:var(--amber)}
+.navlinks{display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-family:var(--grot);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-faint);text-decoration:none;transition:color .2s;white-space:nowrap}
+.navlinks a:hover{color:var(--cyan)}
+.navlinks a .rn{color:var(--amber);margin-right:5px}
+@media(max-width:640px){.navlinks{display:none}}
+
+/* hero */
+header#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:120px 0 80px}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#hero .wrap{position:relative;z-index:2}
+#hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,11,20,.25) 0%,rgba(7,11,20,0) 40%,rgba(7,11,20,.85) 92%)}
+.hero-kicker{font-family:var(--grot);font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--cyan);margin-bottom:26px}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(42px,8vw,104px);line-height:.98;letter-spacing:-.02em}
+h1 .t-sup{display:inline-block;color:var(--amber);font-style:italic}
+.hero-sub{margin-top:30px;font-size:clamp(17px,1.9vw,21px);color:var(--ivory-dim);max-width:58ch}
+.hero-sub i{color:var(--ivory)}
+.hero-meta{margin-top:40px;display:flex;gap:32px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ivory-faint);letter-spacing:.05em}
+.hero-meta div b{display:block;color:var(--cyan);font-weight:400;margin-bottom:3px}
+.hero-cta{margin-top:42px;display:flex;gap:14px;flex-wrap:wrap}
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--grot);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ivory-faint);animation:hint 2.6s ease-in-out infinite}
+@keyframes hint{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+@media(prefers-reduced-motion:reduce){.scroll-hint{animation:none}}
+
+/* dimensional ladder */
+.ladder-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start;margin-top:32px}
+@media(max-width:900px){.ladder-grid{grid-template-columns:1fr}}
+.dim-list{display:flex;flex-direction:column;gap:2px}
+#frameBar{position:relative;margin-top:-58px;display:flex;align-items:center;justify-content:center;gap:18px;padding:10px 14px;background:linear-gradient(rgba(7,11,20,0),rgba(7,11,20,.88) 40%)}
+#frameBar .chips{margin:0;justify-content:center}
+.readout{font-variant-numeric:tabular-nums}
+#hlStepVals{display:inline-block;min-width:30ch;white-space:nowrap}
+#hlRung{display:inline-block;min-width:38ch;white-space:nowrap;text-align:right}
+.stepGrp{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 12px;border:1px solid var(--hairline);border-radius:999px;background:rgba(13,21,36,.8)}
+.stepGrp .readout{min-width:auto}
+#hlFineBand{display:none}
+#hlFineBand.on{display:flex;flex-wrap:wrap;align-items:flex-end}
+.hl-fine label{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.hl-fine output{min-width:82px;text-align:right;font-variant-numeric:tabular-nums}
+.hl-fine input[type=range]{width:100%}
+#ladderCanvas,#hlCanvas,#meshCanvas,#lorenzCanvas,#tvCanvas,#tfeCanvas{touch-action:none}
+@media (pointer:coarse){
+  .btn.mini{min-height:34px;min-width:34px;padding:6px 12px}
+  .stepGrp{padding:5px 12px}
+  input[type=number]{font-size:16px !important}
+  input[type=range]{min-height:30px}
+  select{min-height:32px;font-size:13px !important}
+}
+@media (max-width:720px){
+  .wrap{padding-left:14px;padding-right:14px}
+  .controls{gap:10px}
+  .ctrl.narrow{flex:1 1 100%}
+  #hlStepRow{gap:8px}
+  .readout{font-size:11px}
+  #meshAlg label{flex:1 1 100%}
+}
+
+/* ============ NARROW-VIEWPORT CONTAINMENT ============
+   Measured, not guessed: Chromium at 320 and 360 px reported
+   document.scrollWidth = 383, i.e. the whole page scrolled sideways, and the
+   deepest causes were a table row with min-content 369 px and a canvas with
+   min-content 367 px — both already sitting inside overflow-x:auto parents.
+   The reason the parents were not containing them is the default every grid
+   and flex item carries: min-width:auto, which resolves to MIN-CONTENT and
+   quietly overrides the scroll container. overflow-x:auto cannot shrink a box
+   whose minimum size is its content. So the fix is min-width:0 in the places
+   that scroll or are scrolled, and it belongs at every width, not behind a
+   media query — which is why this block sits outside one.
+   The canvas case is worse than a layout quirk: animate() writes
+   cv.width = cv.clientWidth every frame, so once the element has been wide,
+   its intrinsic width pins the minimum and it can never shrink back. That is a
+   one-way ratchet; max-width:100% breaks it. */
+.table-scroll, .eq-scroll{min-width:0}
+/* Any control row of buttons must be able to wrap. A non-wrapping flex row is
+   the general form of the fault measured in the lattice at 320 px, where three
+   buttons summed to 306 px in a 292 px box and pushed the whole document. */
+.controls .ctrl{min-width:0}
+.controls .ctrl > .seg, .controls .ctrl[style*="display:flex"]{flex-wrap:wrap}
+.seg{flex-wrap:wrap}
+canvas.viz{min-width:0;max-width:100%}
+.panel{min-width:0}
+.ref-grid > *, .split > *, .lattice-grid > *, .ladder-grid > *{min-width:0}
+.papers{grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+/* long mono readouts must be allowed to break rather than push the page */
+.readout, .tier-note code{overflow-wrap:anywhere}
+
+@media (max-width:520px){
+  /* the canon and open-ruling card grids: a 252px track in a 292px content box
+     fits, but below that the track keeps its minimum and overflows. min() lets
+     the single column collapse to the container instead. */
+  #compendium [style*="minmax(252px"]{grid-template-columns:1fr !important}
+  .papers{grid-template-columns:1fr}
+  .paper{padding:18px 16px 16px}
+  .paper .glyph{font-size:30px;right:10px;top:6px}
+  .paper h3{font-size:16px;padding-right:32px}
+  .eq-panel{padding:22px 14px 18px}
+  .eq-panel::before{max-width:calc(100% - 28px)}
+  .eq{font-size:15px}
+  table.data th, table.data td{padding-right:10px}
+  .panel-head{padding:12px 14px;gap:10px}
+  .wrap{padding-left:12px;padding-right:12px}
+  /* Inline flex:0 0 auto on a control row beats the .ctrl.narrow rule above and
+     sizes the row to max-content — which is how three buttons summed to 306 px
+     inside a 292 px box. Below 520 px a control row takes the full width and
+     wraps inside itself instead. */
+  .controls .ctrl[style*="flex:0 0 auto"]{flex:1 1 100% !important}
+  .btn.mini{font-size:10px;padding:5px 9px}
+  /* the nav keeps only the brand at this width, so it must not reserve a row
+     for links that are display:none */
+  #tf-nav .wrap{gap:8px;flex-wrap:nowrap}
+  #tf-nav #palBtn{font-size:9px;padding:3px 6px;letter-spacing:0}
+  #tf-nav .brand{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* Measured at 320-414 px: the canon cards' category labels render at 9.5 px
+     in uppercase with .16em tracking, which is past legible on a phone, and the
+     "→ XIII" module links are 38x12 px tap targets. Both are compendium-wide
+     patterns, so they are fixed by shape rather than one at a time. */
+  #compendium div[style*="font-size:9.5px"]{font-size:10.5px !important;letter-spacing:.12em !important}
+  #compendium a[href^="#"]{display:inline-block;padding:7px 8px;margin:-7px -2px;min-height:30px;line-height:16px}
+}
+/* Tap targets for the in-card module links at every width: an inline anchor of
+   38x12 px is a miss on any touch screen, not only a narrow one. */
+@media (pointer:coarse){
+  #compendium a[href^="#"], .tier-note a[href^="#"]{display:inline-block;padding:6px 8px;margin:-6px -2px;min-height:30px}
+}
+body.frame-tau .rn{color:var(--amber)}
+body.frame-beat .rn{color:#E7C46B}
+.chip.fr-tau[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+.chip.fr-beat[aria-pressed="true"]{border-color:#E7C46B;color:#E7C46B}
+.dim-item{text-align:left;background:transparent;border:none;border-left:2px solid var(--hairline);padding:17px 20px;cursor:pointer;transition:border-color .25s,background .25s}
+.dim-item .dt{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--ivory-dim);transition:color .25s}
+.dim-item .dn{font-family:var(--grot);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ivory-faint);margin-top:2px}
+.dim-item .dd{font-family:var(--serif);font-size:14.5px;color:var(--ivory-faint);margin-top:8px;line-height:1.55;max-width:40ch}
+.dim-item[aria-pressed="true"]{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(245,168,60,.07),transparent)}
+.dim-item[aria-pressed="true"] .dt{color:var(--amber)}
+.dim-item[aria-pressed="true"] .dn{color:var(--cyan)}
+.dim-item:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.split.top{align-items:start}
+
+/* tables */
+table.data{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+table.data caption{caption-side:top;text-align:left;font-family:var(--grot);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ivory-faint);padding-bottom:12px}
+table.data th{font-weight:400;text-align:left;color:var(--cyan);letter-spacing:.05em;border-bottom:1px solid var(--hairline);padding:8px 12px 10px 0;white-space:nowrap}
+table.data td{color:var(--ivory-dim);padding:10px 12px 10px 0;border-bottom:1px solid rgba(237,232,220,.06);white-space:nowrap}
+table.data td.err{color:var(--amber)}
+table.data tr.final td{color:var(--ivory)}
+table.data tr.final td.err{color:var(--cyan);text-shadow:0 0 14px rgba(89,214,201,.5)}
+.table-scroll{overflow-x:auto}
+.ref-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:start;margin-top:28px}
+@media(max-width:960px){.ref-grid{grid-template-columns:1fr}}
+
+/* master eq */
+.tier-note{font-family:var(--grot);font-size:11.5px;letter-spacing:.08em;color:var(--ivory-faint);margin-top:10px;line-height:1.6}
+.gr-list{list-style:none;margin:22px 0 0;display:grid;gap:12px;max-width:64ch}
+.gr-list li{padding-left:26px;position:relative;color:var(--ivory-dim);font-size:16px}
+.gr-list li::before{content:"";position:absolute;left:0;top:.62em;width:12px;height:1.5px;background:linear-gradient(90deg,var(--cyan),var(--amber))}
+
+/* lattice */
+.lattice-grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:40px;align-items:start;margin-top:28px}
+@media(max-width:940px){.lattice-grid{grid-template-columns:1fr}}
+.scale-row{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 6px}
+.scale-cell{font-family:var(--mono);font-size:13px;color:var(--ivory-dim);border:1px solid var(--hairline);border-radius:8px;padding:9px 0;cursor:pointer;transition:all .18s;background:transparent;flex:1;min-width:44px;text-align:center}
+.scale-cell small{display:block;font-size:9px;color:var(--ivory-faint);letter-spacing:.08em;margin-top:2px}
+.scale-cell:hover{border-color:var(--cyan);color:var(--cyan)}
+.scale-cell.on{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.09);box-shadow:0 0 18px rgba(245,168,60,.18)}
+.scale-cell:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* papers / compendium */
+.papers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:34px}
+.paper{border:1px solid var(--hairline);border-radius:12px;padding:22px 22px 20px;background:linear-gradient(160deg,var(--field-2),transparent 70%);transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.paper:hover{border-color:var(--cyan-dim);transform:translateY(-3px)}
+.paper .pn{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em;margin-bottom:11px}
+.paper h3{font-size:17.5px;line-height:1.35;font-weight:600}
+.paper p{font-size:13.5px;line-height:1.6;color:var(--ivory-faint);margin:9px 0 0;max-width:none}
+.paper .glyph{position:absolute;right:14px;top:8px;font-family:var(--serif);font-style:italic;font-size:42px;color:rgba(89,214,201,.14)}
+
+.origin{border:1px solid var(--hairline);border-left:2px solid var(--amber);border-radius:0 12px 12px 0;padding:26px 30px;background:linear-gradient(90deg,rgba(245,168,60,.05),transparent 55%);margin-top:28px}
+.origin p{max-width:72ch}
+.origin .tagline{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.06em;margin-bottom:13px}
+
+footer{border-top:1px solid var(--hairline);padding:54px 0 70px;font-family:var(--grot);font-size:12px;letter-spacing:.14em;color:var(--ivory-faint)}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:baseline}
+footer .disc{font-family:var(--serif);font-size:13.5px;letter-spacing:0;max-width:52ch;line-height:1.6}
+
+/* scroll progress: time elapsed through the document */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--cyan),var(--amber));box-shadow:0 0 10px rgba(245,168,60,.5);pointer-events:none}
+.navlinks a.active{color:var(--amber)}
+/* section reveal (only when JS is live) */
+body.js section > .wrap{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+body.js section > .wrap.vis{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){body.js section > .wrap{opacity:1;transform:none;transition:none}}
+
+/* command console */
+#palette{position:fixed;inset:0;z-index:80;display:none;background:rgba(4,6,12,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#palette.open{display:flex;align-items:flex-start;justify-content:center;padding:12vh 18px 0}
+.pal-box{width:min(560px,100%);background:var(--field-2);border:1px solid var(--cyan-dim);border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 40px rgba(89,214,201,.12)}
+.pal-box input{width:100%;background:transparent;border:none;outline:none;color:var(--ivory);font-family:var(--mono);font-size:15px;padding:16px 18px;border-bottom:1px solid var(--hairline)}
+.pal-box input::placeholder{color:var(--ivory-faint)}
+.pal-list{max-height:46vh;overflow-y:auto}
+.pal-item{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:11px 18px;cursor:pointer;font-family:var(--grot);font-size:13px;letter-spacing:.06em;color:var(--ivory-dim)}
+.pal-item .cat{font-family:var(--mono);font-size:10px;color:var(--ivory-faint);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.pal-item.sel{background:var(--field-3);color:var(--amber)}
+.pal-item.sel .cat{color:var(--cyan)}
+.pal-foot{display:flex;gap:16px;padding:9px 18px;border-top:1px solid var(--hairline);font-family:var(--mono);font-size:10px;color:var(--ivory-faint)}
+kbd{font-family:var(--mono);font-size:10px;color:var(--cyan);border:1px solid var(--hairline);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--field)}
+#palBtn{font-family:var(--mono);font-size:10.5px;color:var(--ivory-faint);background:transparent;border:1px solid var(--hairline);border-radius:6px;padding:4px 9px;cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s}
+#palBtn:hover{color:var(--cyan);border-color:var(--cyan-dim)}
+.key-hint{font-family:var(--mono);font-size:10.5px;color:var(--ivory-faint);letter-spacing:.04em;margin-top:10px}
+
+/* M3 source lattice */
+.m3-wrap{overflow-x:auto;padding:18px}
+.m3-grid{display:grid;grid-template-columns:repeat(13,minmax(52px,1fr));gap:0;min-width:720px;border:1px solid var(--hairline)}
+.m3-cell{
+  font-family:var(--mono);font-size:10.5px;color:var(--ivory-dim);
+  background:transparent;border:none;border-right:1px solid rgba(237,232,220,.09);border-bottom:1px solid rgba(237,232,220,.09);
+  padding:9px 3px;cursor:pointer;text-align:center;white-space:nowrap;transition:background .15s,color .15s;
+}
+.m3-cell:hover{color:var(--cyan);background:rgba(89,214,201,.06)}
+.m3-cell:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}
+.m3-cell.band{background:rgba(89,214,201,.045)}
+.m3-cell.bandL{border-left:2px double rgba(89,214,201,.55)}
+.m3-cell.bandR{border-right:2px double rgba(89,214,201,.55)}
+.m3-cell.a440{box-shadow:inset 0 0 0 1px rgba(245,168,60,.7)}
+.m3-cell.zeroSph{position:relative}
+.m3-cell.zeroSph::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;border:1px solid rgba(237,232,220,.55);background:transparent}
+.m3-cell:not(.zeroSph)::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;border:1px solid rgba(89,214,201,.30);background:radial-gradient(circle at 35% 35%, rgba(89,214,201,.45), rgba(89,214,201,.06))}
+.m3-cell{position:relative}
+.m3-key-zero,.m3-key-work{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:baseline;margin:0 2px}
+.m3-key-zero{border:1px solid rgba(237,232,220,.55)}
+.m3-key-work{border:1px solid rgba(89,214,201,.35);background:radial-gradient(circle at 35% 35%, rgba(89,214,201,.5), rgba(89,214,201,.08))}
+.m3-cell.rule{border-right:3px double rgba(237,232,220,.35)}
+.m3-cell.tonic{color:var(--amber);font-weight:500}
+
+.m3-cell.lit{background:rgba(245,168,60,.16);color:var(--amber);box-shadow:inset 0 0 0 1px rgba(245,168,60,.4)}
+.m3-cell.sel{background:rgba(245,168,60,.3);color:var(--field);font-weight:600;text-shadow:none}
+.m3-readout{font-family:var(--mono);font-size:11.5px;color:var(--ivory-dim);padding:12px 20px;border-top:1px solid var(--hairline);display:flex;gap:18px;flex-wrap:wrap}
+.m3-readout b{color:var(--amber);font-weight:500}
+.m3-readout .q{color:var(--cyan)}
+.m3-grid.m3-num .m3-cell{font-size:9.3px;letter-spacing:0;padding:9px 2px}
+
+
+/* live equation lines — panels recalculate with the module's current parameters */
+.eq-live{border-top:1px dashed var(--hairline);margin-top:16px;padding-top:12px;color:var(--cyan);font-size:14px;overflow-x:auto}
+.eq-live .katex{font-size:.98em}
+.eq-live::before{content:"live";font-family:var(--grot);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:7px}
+.txt-in{font-family:var(--mono);font-size:12.5px;color:var(--ivory);background:var(--field-3);border:1px solid var(--hairline);border-radius:8px;padding:8px 12px;width:100%;outline:none}
+.txt-in:focus{border-color:var(--cyan)}
+#helpBox{position:fixed;inset:0;z-index:80;display:none;background:rgba(4,6,12,.66);backdrop-filter:blur(6px)}
+#helpBox.open{display:flex;align-items:center;justify-content:center;padding:20px}
+.help-card{width:min(460px,100%);background:var(--field-2);border:1px solid var(--cyan-dim);border-radius:14px;padding:26px 30px}
+.help-card h3{font-family:var(--grot);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+.help-card .row{display:flex;justify-content:space-between;gap:16px;font-family:var(--grot);font-size:13px;color:var(--ivory-dim);padding:7px 0;border-bottom:1px solid rgba(237,232,220,.06)}
+.icv-out{font-family:var(--mono);font-size:11.5px;color:var(--cyan);margin-top:10px;letter-spacing:.04em}
+.icv-out b{color:var(--amber);font-weight:500}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hl-panel{position:relative}
+.hl-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
+  background:linear-gradient(-65deg,var(--cyan),#c850c8,var(--amber),var(--cyan));
+  background-size:400% 400%;animation:gradientBG 45s ease infinite}
+@media(prefers-reduced-motion:reduce){.hl-panel::before{animation:none}}
+.qreg{display:flex;flex-wrap:wrap;gap:6px;padding:12px 20px;border-top:1px solid var(--hairline)}
+.qreg .qk{font-family:var(--mono);font-size:10.5px;color:var(--ivory-dim);border:1px solid var(--hairline);border-radius:6px;padding:5px 9px;cursor:pointer;background:transparent;transition:all .15s}
+.qreg .qk small{color:var(--ivory-faint);margin-right:5px}
+.qreg .qk:hover{border-color:var(--cyan);color:var(--cyan)}
+.qreg .qk.hit{border-color:var(--amber);color:var(--amber);background:rgba(245,168,60,.12);box-shadow:0 0 14px rgba(245,168,60,.25)}
+.qreg .qk.zero{border-style:dashed;color:var(--ivory-faint)}
+.qreg .qk.zero.hit{border-color:var(--ivory);color:var(--ivory);background:rgba(237,232,220,.08)}
+</style>
+</head>
+<body>
+
+<div class="wrap" style="padding-top:28px">
+  <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory-faint)">Chronowave Dynamics &middot; Temporal Engine &middot; standalone module extract</div>
+</div>
+
+<section id="gnss">
+  <div class="wrap">
+    <div class="eyebrow"><span class="rn">VI</span> Cubic time dilation</div>
+    <h2>The Lorentz factor, <em>taken to the cube root</em></h2>
+    <p class="lede">The GNSS proposal replaces the traditional exponent &minus;1/2 with &minus;1/3, validated
+      across 1,000 simulations against live constellation data. At satellite speeds the models differ by parts
+      in 10<sup>11</sup> &mdash; exactly the regime where nanoseconds become meters of position error. Push the
+      slider relativistic and watch the two models tear apart.</p>
+    <div style="border:1px solid var(--hairline);border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;margin:0 0 24px;font-family:var(--mono);font-size:11px;line-height:1.85;color:var(--ivory-dim)">
+      <span style="font-family:var(--grot);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)">Status &middot; excluded as a clock law, kinematically</span><br>
+      A storage-ring measurement (Botermann et&nbsp;al. 2014, Li&#8314; at &beta;&nbsp;=&nbsp;0.338) already bounds
+      |k&minus;&frac12;|&nbsp;&lt;&nbsp;1.9&times;10<sup>&minus;8</sup>; an independent fit across 14 one-electron
+      ions gives k&#770;&nbsp;=&nbsp;0.499962&nbsp;&plusmn;&nbsp;0.000102, excluding k&nbsp;=&nbsp;&#8531; at
+      1626&sigma; (<em>Cubic Time Dimensions in Quantum Mechanics</em>, 2nd&nbsp;ed. revised, &sect;7.1). Paired
+      with Module XI's own gravitational exclusion at 4762&sigma;, the cube-root exponent does not survive as a
+      literal clock rate in either channel. The simulations below remain useful as a demonstration of how far two
+      candidate rate laws would diverge at satellite speed &mdash; but the (1&minus;&beta;&sup2;)<sup>&minus;1/3</sup>
+      exponent itself now recurs only where the Engine's own cross-check places it: strong-field radiated power
+      (Airy structure), not a clock rate. <a href="#compendium" style="color:var(--amber)">&rarr; open rulings</a>
+    </div>
+    <div class="eq-panel" data-tag="Two dilation models">
+      <div class="eq eq-scroll" data-tex="\gamma_{\text{trad}} = \Big(1-\tfrac{v^2}{c^2}\Big)^{-1/2} \qquad\longrightarrow\qquad \gamma_{\text{cubic}} = \Big(1-\tfrac{v^2}{c^2}\Big)^{-1/3} \approx 1 + \tfrac{1}{3}\tfrac{v^2}{c^2} + \tfrac{2}{9}\tfrac{v^4}{c^4} + \cdots"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <span>&gamma; &minus; 1 vs &beta; &middot; log scale &middot; traditional cyan &middot; cubic amber</span>
+        <span class="readout">&beta; = <b id="gnBeta">1.29e-5</b></span>
+      </div>
+      <canvas class="viz" id="gnssCanvas" height="400" aria-label="Log chart of traditional versus cubic time dilation across velocity"></canvas>
+      <div class="stats">
+        <div class="stat"><div class="k">velocity</div><div class="v" id="gnV">3.874 km/s</div></div>
+        <div class="stat"><div class="k">&gamma;_trad &minus; 1</div><div class="v" id="gnGt">8.34e-11</div></div>
+        <div class="stat"><div class="k">&gamma;_cubic &minus; 1</div><div class="v warm" id="gnGc">5.56e-11</div></div>
+        <div class="stat"><div class="k">model split</div><div class="v" id="gnDiff">2.78e-11</div></div>
+        <div class="stat"><div class="k">drift / day</div><div class="v warm" id="gnDrift">2.4 &micro;s</div></div>
+        <div class="stat"><div class="k">range error / day</div><div class="v" id="gnRange">720 m</div></div>
+        <div class="stat"><div class="k">clock corr.</div><div class="v" id="gnNs">0.03 ns/s</div></div>
+      </div>
+      <div class="controls" style="border-bottom:1px solid var(--hairline);padding-bottom:10px;margin-bottom:6px">
+        <div class="ctrl" style="flex:2 1 260px">
+          <label for="gnAlt">Orbit solver &middot; altitude <output id="gnAltOut">20,180 km</output></label>
+          <input type="range" id="gnAlt" min="200" max="40000" step="20" value="20180">
+        </div>
+        <div class="ctrl narrow">
+          <label for="gnGM">body GM &times;10&#8321;&#8324; m&sup3;/s&sup2; <output id="gnGMOut">39.86 &middot; Earth</output></label>
+          <input type="range" id="gnGM" min="2" max="130" step="0.5" value="39.86">
+        </div>
+        <div class="ctrl narrow" style="flex:1 1 100%">
+          <div class="readout" id="gnOrbOut" style="line-height:1.7">&mdash;</div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctrl" style="flex:2 1 300px">
+          <label for="gnVR">Log&#8321;&#8320; &beta; = v/c <output id="gnVROut">-4.89</output></label>
+          <input type="range" id="gnVR" min="-6" max="-0.0022" step="0.005" value="-4.889">
+        </div>
+        <div class="chips" role="group" aria-label="Satellite presets" style="flex:3 1 340px">
+          <button class="chip" data-v="3874" aria-pressed="true">BEIDOU-3 M14 &middot; 3.874 km/s</button>
+          <button class="chip" data-v="3960">GLONASS-K1 &middot; 3.96 km/s</button>
+          <button class="chip" data-v="3874.1">GPS BIIA-10 &middot; 3.874 km/s</button>
+          <button class="chip" data-v="3670">GALILEO FM15 &middot; 3.67 km/s</button>
+          <button class="chip" data-v="7660">ISS &middot; 7.66 km/s</button>
+          <button class="chip" data-v="17000">Voyager 1 &middot; 17 km/s</button>
+          <button class="chip" data-v="149896229">0.5c</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="panel" style="margin-top:26px">
+      <div class="panel-head">
+        <span>Satellite laboratory &middot; the full online array, the exponent on trial</span>
+        <span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span class="seg" role="group" aria-label="Data generator"><button id="gnlGR" aria-pressed="true" title="Generate clock residuals from GR's &minus;1/2 &mdash; the calibration real constellations fly on (MEASURED-anchored)">GR data</button><button id="gnlCubic" aria-pressed="false" title="Generate from the cubic &minus;1/3 claim">cubic data</button></span>
+          <button class="btn mini ghost" id="gnlRun">Resample</button>
+        </span>
+      </div>
+      <div class="controls" style="padding-top:12px">
+        <div class="ctrl narrow" style="flex:1 1 300px">
+          <label for="gnlSat">Satellite &middot; alphanumeric ID <output id="gnlSatN">&mdash;</output></label>
+          <select id="gnlSat" style="width:100%;background:#0d1524;color:var(--ivory);border:1px solid var(--hairline);border-radius:6px;padding:6px 8px;font-family:var(--mono);font-size:11.5px"></select>
+        </div>
+        <div class="ctrl narrow" style="flex:0 0 auto;display:flex;align-items:flex-end;gap:8px">
+          <button class="btn mini ghost" id="gnlLive" title="Fetch the live almanac in-browser (CelesTrak GP, user-initiated only): epochs and mean anomalies become MEASURED">Fetch live almanac</button>
+          <button class="btn mini ghost" id="gnlPaste" title="No network needed: paste CelesTrak GP JSON or 3-line TLE text and the array goes MEASURED">Paste almanac</button>
+          <button class="btn mini ghost" id="gnlSend" title="Send this satellite's current beta to the module's Lorentz input">&beta; &rarr; module</button>
+        </div>
+        <div class="ctrl" style="flex:2 1 320px"><div class="readout" id="gnlSrc" style="line-height:1.7">&mdash;</div></div>
+      </div>
+      <div id="gnlPasteBox" style="display:none;padding:0 16px 12px">
+        <label for="gnlPasteTA" style="display:block;font-family:var(--grot);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px">Paste GP JSON or 3-line TLE &middot; no network required</label>
+        <textarea id="gnlPasteTA" spellcheck="false" rows="5" placeholder="Paste either:&#10;  the JSON array from celestrak.org/NORAD/elements/gp.php?GROUP=gnss&amp;FORMAT=json&#10;  or 3-line TLE text (name / line1 / line2), any number of satellites" style="width:100%;background:#0d1524;color:var(--ivory);border:1px solid var(--hairline);border-radius:6px;padding:8px;font-family:var(--mono);font-size:11px;line-height:1.5;resize:vertical"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn mini" id="gnlPasteGo">Apply</button>
+          <button class="btn mini ghost" id="gnlFileBtn" title="Open a .json or .txt almanac you downloaded &mdash; an ordinary file read, no network and no CORS">Open file&hellip;</button>
+          <input type="file" id="gnlFile" accept=".json,.txt,.tle,application/json,text/plain" style="display:none">
+          <button class="btn mini ghost" id="gnlPasteClear">Clear &amp; revert to snapshot</button>
+          <span class="readout" id="gnlPasteOut" style="flex:1 1 220px">&mdash;</span>
+        </div>
+      </div>
+      <div id="gnlSatCard" style="padding:0 16px 12px;font-family:var(--mono);font-size:11px;line-height:1.95;color:var(--ivory-dim)"></div>
+      <div id="gnlTele" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--hairline);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)"></div>
+      <canvas class="viz" id="gnTeleCanvas" height="92" aria-label="Live beta-squared telemetry traces, one per constellation, on per-trace scales"></canvas>
+      <canvas class="viz" id="gnRegCanvas" height="250" aria-label="Full-array scatter of clock-rate offset against beta squared with both model lines and the fitted regression"></canvas>
+      <div class="controls" style="padding-top:12px">
+        <div class="ctrl narrow">
+          <label for="gnlNoise">Clock noise &sigma; &times;10&#8315;&sup1;&sup2; <output id="gnlNoiseOut">2.0</output></label>
+          <input type="range" id="gnlNoise" min="0" max="8" step="0.1" value="2">
+        </div>
+        <div class="ctrl" style="flex:2 1 320px"><div class="readout" id="gnlNow" style="line-height:1.7">&mdash;</div></div>
+      </div>
+      <div id="gnlTable" style="padding:0 16px 14px;font-family:var(--mono);font-size:11px;line-height:1.9;overflow-x:auto"></div>
+    </div>
+    <p class="tier-note" style="max-width:none">The array is every operational GNSS satellite, 145 birds across six
+      constellations, with the eccentricity clock correction as the sharpest non-arbitrary discriminator between
+      k&nbsp;=&nbsp;&frac12; and k&nbsp;=&nbsp;&#8531; (17&#37; amplitude split). The live almanac fetch is the most
+      fragile part and the least important: vis-viva makes &beta;&sup2; and &Phi; affinely dependent at fixed
+      semi-major axis, so rotating every satellite's phase through a full turn moves k&#770; by at most
+      1.8&times;10<sup>&minus;7</sup> &mdash; live data would not improve the measurement. The near-degeneracy
+      between &beta;&sup2; and &Phi; (r&nbsp;=&nbsp;0.968) is broken by adding ground stations, confirmed by both a
+      correlation and an independent error-ratio check.</p>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div style="color:var(--ivory);letter-spacing:.3em;text-transform:uppercase;margin-bottom:10px">Chronowave <span style="color:var(--amber)">Dynamics</span></div>
+      <div>Framework &amp; papers &middot; Anthony M. Vargas &amp; Aethus Iqbal-Samir &middot; 2024&ndash;2026</div>
+    </div>
+    <div class="disc">Module VI &middot; Cubic Time Dilation (GNSS), extracted standalone from the full Temporal
+      Engine compendium on 2026-10-17. A speculative theoretical framework, presented as proposed in the source
+      papers and prototypes. Temporal Engine edition compiled with Claude.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const CYAN = "#59D6C9", AMBER = "#F5A83C", IVORY = "#EDE8DC";
+
+/* ---------------- KaTeX with fallback ---------------- */
+function renderTex(el, tex, display){
+  if (window.katex){
+    try { katex.render(tex, el, {displayMode: display !== false, throwOnError: false}); return; }
+    catch(e){}
+  }
+  el.innerHTML = '<span class="katex-fallback"></span>';
+  el.firstChild.textContent = tex;
+}
+document.querySelectorAll(".eq[data-tex]").forEach(el => renderTex(el, el.dataset.tex));
+
+/* ---------------- canvas core ---------------- */
+function fitCanvas(cv){
+  /* THE WHITEOUT BUG LIVED HERE: this used to read h from the height
+     attribute and then write cv.height = h*dpr \u2014 which IS that attribute.
+     On DPR-2 devices every call doubled the canvas (300\u2192600\u2192...) until it
+     passed the browser's max canvas area and rendering silently stopped:
+     the hyper-expansion and the blankouts were one bug. The design height
+     is now cached once and the resize is idempotent. */
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (!cv.dataset.designH) cv.dataset.designH = cv.getAttribute("height") || cv.clientHeight || 300;
+  const w = cv.clientWidth, h = +cv.dataset.designH;
+  const bw = Math.round(w * dpr), bh = Math.round(h * dpr);
+  if (cv.width !== bw) cv.width = bw;
+  if (cv.height !== bh) cv.height = bh;
+  cv.style.height = h + "px";
+  const ctx = cv.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return {ctx, w, h};
+}
+const animators = [];
+function animate(cv, draw){
+  /* Resilient loop: an exception in one frame must never kill the rAF chain
+     (the old behavior \u2014 one NaN-radius throw blanked the module until
+     reload: the reported whiteouts). Errors are caught, context state is
+     restored so dirt can't leak into later frames, the first few are logged
+     (+ collected on window.__frameErrs for the harness). Zero-size boxes are
+     skipped rather than fitted; height changes now also trigger refit. */
+  let st = null, visible = true, t0 = performance.now(), errN = 0;
+  const io = new IntersectionObserver(en => { visible = en[0].isIntersecting; }, {rootMargin:"140px"});
+  io.observe(cv);
+  function frame(now){
+    if (visible && cv.clientWidth > 0){
+      /* designH is also watched: a view that asks for a new height from inside
+         its draw (VIII's legacy "Two clocks · Z" asks for 472/664) used to be
+         clipped at the old height, because clientHeight still matched st.h */
+      if (!st || st.w !== cv.clientWidth || st.h !== cv.clientHeight ||
+          (cv.dataset.designH && st.h !== +cv.dataset.designH)) st = fitCanvas(cv);
+      try{
+        st.ctx.save();
+        draw(st.ctx, st.w, st.h, reduced ? 0 : (now - t0) / 1000);
+        st.ctx.restore();
+      }catch(e2){
+        try{ st.ctx.restore(); }catch(e3){}
+        errN++;
+        (window.__frameErrs = window.__frameErrs || []).push(cv.id + ": " + e2.message);
+        if (errN <= 3) console.warn("frame error on #" + cv.id, e2);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  animators.push(() => { st = null; });
+}
+window.addEventListener("resize", () => animators.forEach(f => f()));
+
+/* ---------------- VI. GNSS cubic dilation ---------------- */
+const C_LIGHT = 299792458;
+const gn = {
+  el: {
+    r: document.getElementById("gnVR"), rOut: document.getElementById("gnVROut"),
+    beta: document.getElementById("gnBeta"), v: document.getElementById("gnV"),
+    gt: document.getElementById("gnGt"), gc: document.getElementById("gnGc"),
+    diff: document.getElementById("gnDiff"), drift: document.getElementById("gnDrift")
+  },
+  beta(){ return Math.pow(10, +this.el.r.value); },
+  upd(){
+    const b = this.beta(), v = b*C_LIGHT;
+    const gt = Math.pow(1 - b*b, -0.5) - 1;
+    const gc = Math.pow(1 - b*b, -1/3) - 1;
+    this.el.rOut.value = (+this.el.r.value).toFixed(2);
+    this.el.beta.textContent = b.toExponential(2);
+    this.el.v.textContent = v < 1e6 ? (v/1000).toFixed(3) + " km/s" : (b).toFixed(3) + " c";
+    this.el.gt.textContent = gt.toExponential(2);
+    this.el.gc.textContent = gc.toExponential(2);
+    this.el.diff.textContent = Math.abs(gt - gc).toExponential(2);
+    const drift = Math.abs(gt - gc) * 86400;
+    this.el.drift.textContent = drift < 1e-3 ? (drift*1e6).toFixed(2) + " \u00B5s"
+      : drift < 1 ? (drift*1e3).toFixed(2) + " ms" : drift.toFixed(2) + " s";
+    document.getElementById("gnNs").textContent = (Math.abs(gt - gc)*1e9).toPrecision(3) + " ns/s" +
+      (Math.abs(b - 1.292e-5) < 3e-7 && Math.abs(gt - 8.35e-11) < 4e-13 && Math.abs(gc - 5.57e-11) < 4e-13
+        ? " \u00B7 compendium \u2713" : "");
+    const range = drift * C_LIGHT;
+    document.getElementById("gnRange").textContent =
+      range < 1000 ? range.toFixed(1) + " m"
+      : range < 1e6 ? (range/1000).toFixed(1) + " km"
+      : (range/1000).toExponential(2) + " km";
+    document.querySelectorAll('#gnss .chip').forEach(c => {
+      const cb = +c.dataset.v / C_LIGHT;
+      c.setAttribute("aria-pressed", String(Math.abs(Math.log10(cb) - +this.el.r.value) < 0.02));
+    });
+  }
+};
+gn.el.r.addEventListener("input", () => gn.upd());
+document.querySelectorAll('#gnss .chip').forEach(c => c.addEventListener("click", () => {
+  gn.el.r.value = Math.log10(+c.dataset.v / C_LIGHT); gn.upd();
+}));
+gn.acc = 0; gn._lt = null;
+gn.tick = function(t){
+  if (this._lt === null){ this._lt = t; return; }
+  const dt = Math.min(0.1, Math.max(0, t - this._lt)); this._lt = t;
+  const b = this.beta();
+  this.acc += dt * Math.abs(Math.pow(1 - b*b, -0.5) - Math.pow(1 - b*b, -1/3)) * 1e6;  /* microseconds */
+};
+gn.upd();
+const gnCv = document.getElementById("gnssCanvas");
+gnCv.style.cursor = "crosshair";
+gnCv.addEventListener("click", e => {
+  const r = gnCv.getBoundingClientRect();
+  const padL = 62, padR = 26, iw = r.width - padL - padR;
+  const u = (e.clientX - r.left - padL)/iw;
+  if (u < 0 || u > 1) return;
+  gn.el.r.value = Math.min(-0.0022, -6 + 6*u);
+  gn.upd();
+});
+animate(gnCv, (ctx, w, h, t) => {
+  gn.tick(t);
+  ctx.save();
+  ctx.clearRect(0, 0, w, h);
+  const padL = 62, padR = 26, padT = 26, padB = 44;
+  const iw = w - padL - padR, ih = h - padT - padB;
+  const xmin = -6, xmax = 0;                 /* log10 beta */
+  const ymin = -12, ymax = 1.2;              /* log10 (gamma-1) */
+  function X(lb){ return padL + iw*(lb - xmin)/(xmax - xmin); }
+  function Y(g1){ return padT + ih*(1 - (Math.log10(Math.max(1e-13, g1)) - ymin)/(ymax - ymin)); }
+  ctx.font = "10px 'IBM Plex Mono', monospace";
+  for (let e = ymin; e <= 1; e += 2){
+    const y = padT + ih*(1 - (e - ymin)/(ymax - ymin));
+    ctx.strokeStyle = "rgba(89,214,201,.08)";
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+    ctx.fillStyle = "rgba(237,232,220,.35)";
+    ctx.fillText("1e" + e, 10, y + 3);
+  }
+  for (let e = xmin; e <= xmax; e++){
+    const x = X(e);
+    ctx.strokeStyle = "rgba(89,214,201,.06)";
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, h - padB); ctx.stroke();
+    ctx.fillStyle = "rgba(237,232,220,.35)"; ctx.textAlign = "center";
+    ctx.fillText("\u03B2=1e" + e, x, h - 22);
+    ctx.textAlign = "left";
+  }
+  /* curves */
+  for (const [exp, col] of [[-0.5, CYAN], [-1/3, AMBER]]){
+    ctx.strokeStyle = col; ctx.lineWidth = 1.8;
+    ctx.shadowColor = col; ctx.shadowBlur = 6;
+    ctx.beginPath();
+    for (let px = 0; px <= iw; px += 2){
+      const lb = xmin + (xmax - xmin)*px/iw;
+      const b = Math.pow(10, lb);
+      if (b >= 1) continue;
+      const g1 = Math.pow(1 - b*b, exp) - 1;
+      const y = Y(g1);
+      px === 0 ? ctx.moveTo(padL + px, y) : ctx.lineTo(padL + px, y);
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+  }
+  /* current marker */
+  const b = gn.beta();
+  const x = X(Math.log10(b));
+  ctx.strokeStyle = "rgba(237,232,220,.3)"; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, h - padB); ctx.stroke();
+  ctx.setLineDash([]);
+  for (const [exp, col] of [[-0.5, CYAN], [-1/3, AMBER]]){
+    const g1 = Math.pow(1 - b*b, exp) - 1;
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(x, Y(g1), 4.6, 0, 7); ctx.fill();
+    ctx.strokeStyle = "rgba(7,11,20,1)"; ctx.lineWidth = 2; ctx.stroke();
+  }
+  ctx.fillStyle = "rgba(237,232,220,.45)"; ctx.font = "11px 'IBM Plex Mono', monospace";
+  ctx.fillText("\u03B3\u22121 (trad, cyan) vs (cubic, amber)", padL + 8, padT + 14);  ctx.restore();
+  ctx.fillStyle = "rgba(237,232,220,.55)"; ctx.font = "10px 'IBM Plex Mono', monospace";
+  ctx.fillText("mission clock: \u0394\u03B3 accumulated " + gn.acc.toFixed(2) + " \u00B5s since load", 16, 20);
+});
+
+/* ---------------- VI.b GNSS satellite laboratory ----------------
+   THE FULL ONLINE ARRAY: every operational GNSS satellite (SATCAT OPS "+"),
+   geometry MEASURED (a, e from apsides; i; period), phases ASSUMED
+   (deterministic per-NORAD seed) until the in-browser live-almanac fetch
+   succeeds and CelesTrak epochs + mean anomalies make them MEASURED.
+   Propagation: two-body Kepler (ASSUMED) \u2014 honest for r, v, \u03B2; not for
+   sky position. Physical sign convention: rate = \u03A6_ground \u2212 \u03A6_sat \u2212 k\u03B2\u00B2
+   (clock higher \u21D2 faster). Eccentricity clock correction coefficient is
+   DERIVED: d\u03C4/dt = 1 \u2212 (1+2k)\u03BC/(rc\u00B2) + k\u03BC/(ac\u00B2); the periodic 1/r part
+   integrates to \u2212(1+2k)/2 \u00B7 2\u221A(\u03BCa) e sinE / c\u00B2. GR k=\u00BD \u2192 1; cubic
+   k=\u2153 \u2192 5/6. Receivers measure this term every second. */
+const gnl = {
+  truth: 0.5, noise: 2, seed: 7,
+  GM: 3.986004418e14, C: 299792458, PHIG: 6.953e-10,
+  SNAP_EPOCH: "2026-08-11T19:55:09Z",
+  SRC_SNAP: "SATCAT snapshot \u00B7 CelesTrak via astrion-tech mirror",
+  SYS: { G:["GPS","rgba(89,214,201,.85)"], R:["GLONASS","rgba(245,168,60,.85)"], E:["Galileo","rgba(231,196,107,.85)"], C:["BeiDou","rgba(150,120,255,.85)"], J:["QZSS","rgba(235,110,220,.85)"], I:["NavIC","rgba(120,200,255,.85)"] },
+  SATDB: "G|NAVSTAR 43 (USA 132)|24876|26560.6|0.010485|56.02;G|NAVSTAR 48 (USA 151)|26407|26561.1|0.011972|54.85;G|NAVSTAR 51 (USA 166)|27663|26560.6|0.01489|54.88;G|NAVSTAR 54 (USA 177)|28190|26561.1|0.011784|54.79;G|NAVSTAR 56 (USA 180)|28474|26560.6|0.017074|55.1;G|NAVSTAR 57 (USA 183)|28874|26560.6|0.012857|54.84;G|NAVSTAR 58 (USA 190)|29486|26559.6|0.010787|54.71;G|NAVSTAR 59 (USA 192)|29601|26560.6|0.00849|54.93;G|NAVSTAR 60 (USA 196)|32260|26561.6|0.016848|54.13;G|NAVSTAR 61 (USA 199)|32384|26560.1|0.003614|54.99;G|NAVSTAR 62 (USA 201)|32711|26561.1|0.021121|54.5;G|NAVSTAR 64 (USA 206)|35752|26561.6|0.005327|56.24;G|NAVSTAR 65 (USA 213)|36585|26560.6|0.012744|54.27;G|NAVSTAR 67 (USA 239)|38833|26559.6|0.018355|53.59;G|NAVSTAR 68 (USA 242)|39166|26560.1|0.014157|54.47;G|NAVSTAR 69 (USA 248)|39533|26560.1|0.008396|53.66;G|NAVSTAR 70 (USA 251)|39741|26561.1|0.00384|56.47;G|NAVSTAR 71 (USA 256)|40105|26560.6|0.00352|55.39;G|NAVSTAR 72 (USA 258)|40294|26561.1|0.006739|57.02;G|NAVSTAR 73 (USA 260)|40534|26559.6|0.011088|53.16;G|NAVSTAR 74 (USA 262)|40730|26561.1|0.011596|53.94;G|NAVSTAR 75 (USA 265)|41019|26559.6|0.011389|56.99;G|NAVSTAR 76 (USA 266)|41328|26559.1|0.009677|55.56;G|NAVSTAR 77 (USA 289)|43873|26560.1|0.003916|55.71;G|NAVSTAR 78 (USA 293)|44506|26559.6|0.006457|55.61;G|NAVSTAR 79 (USA 304)|45854|26560.6|0.006645|56.7;G|NAVSTAR 80 (USA 309)|46826|26560.1|0.00753|53.97;G|NAVSTAR 81 (USA 319)|48859|26560.1|0.002748|55.15;G|NAVSTAR 82 (USA 343)|55268|26560.1|0.000602|55.13;G|NAVSTAR 83 (USA 440)|62339|26559.6|0.001826|54.82;G|NAVSTAR 84 (USA 545)|64202|26559.6|0.000847|55.27;G|NAVSTAR 85 (USA 581)|67588|26560.1|0.002108|55.12;G|NAVSTAR 86 (USA 585)|68791|26559.1|0.002071|54.96;R|COSMOS 2434 [GLONASS-M]|32393|25508.1|0.000118|64.32;R|COSMOS 2436 [GLONASS-M]|32395|25508.1|0.001725|64.33;R|COSMOS 2456 [GLONASS-M]|36111|25508.1|0.000274|65.04;R|COSMOS 2460 [GLONASS-M]|36402|25508.1|0.000196|65.39;R|COSMOS 2475 [GLONASS-M]|37869|25508.1|0.002431|65.31;R|COSMOS 2476 [GLONASS-M]|37867|25508.1|0.002195|65.3;R|COSMOS 2477 [GLONASS-M]|37868|25508.1|0.001882|65.31;R|COSMOS 2485 [GLONASS-M]|39155|25507.6|0.002254|65.45;R|COSMOS 2492 [GLONASS-M]|39620|25508.1|0.001058|65.26;R|COSMOS 2500 [GLONASS-M]|40001|25507.6|0.000882|65.2;R|COSMOS 2501 [GLONASS-K]|40315|25507.6|0.002254|63.62;R|COSMOS 2514 [GLONASS-M]|41330|25508.1|0.001294|64.99;R|COSMOS 2522 [GLONASS-M]|42939|25508.1|0.001058|64.08;R|COSMOS 2527 [GLONASS-M]|43508|25507.6|0.000647|65.61;R|COSMOS 2529 [GLONASS-M]|43687|25508.1|0.001176|64.3;R|COSMOS 2534 [GLONASS-M]|44299|25508.1|0.001294|64.37;R|COSMOS 2544 [GLONASS-M]|44850|25508.1|0.001176|65.59;R|COSMOS 2545 [GLONASS-M]|45358|25508.1|0.001058|64.32;R|COSMOS 2547 [GLONASS-K]|46805|25508.1|0.000941|64.6;R|COSMOS 2557 [GLONASS-K]|52984|25508.1|0.001137|64.26;R|COSMOS 2559 [GLONASS-K]|54031|25508.1|0.001333|64.24;R|COSMOS 2564 [GLONASS-M]|54377|25508.1|0.001176|64.74;R|COSMOS 2596 [GLONASS-K1]|65590|25508.1|0.001137|64.6;E|GSAT0101 (GALILEO-PFM)|37846|29600.1|0.000135|56.98;E|GSAT0102 (GALILEO-FM2)|37847|29600.1|0.000169|56.98;E|GSAT0103 (GALILEO-FM3)|38857|29600.1|0.000304|55.84;E|GSAT0203 (GALILEO 7)|40544|29600.1|0.000338|56.77;E|GSAT0205 (GALILEO 9)|40889|29960.6|0.000651|54.94;E|GSAT0206 (GALILEO 10)|40890|29600.6|0.00022|54.94;E|GSAT0207 (GALILEO 15)|41859|29600.6|0.000389|55.53;E|GSAT0208 (GALILEO 11)|41175|29600.6|0.000389|55.86;E|GSAT0209 (GALILEO 12)|41174|29600.1|0.000439|55.86;E|GSAT0210 (GALILEO 13)|41550|29600.1|0.000473|55.08;E|GSAT0211 (GALILEO 14)|41549|29600.1|0.000372|55.09;E|GSAT0212 (GALILEO 16)|41860|29600.6|0.000422|55.53;E|GSAT0213 (GALILEO 17)|41861|29600.1|0.000304|55.53;E|GSAT0214 (GALILEO 18)|41862|29600.6|0.000287|55.52;E|GSAT0215 (GALILEO 19)|43055|29600.1|0.000372|55.06;E|GSAT0216 (GALILEO 20)|43056|29600.1|0.000507|55.07;E|GSAT0217 (GALILEO 21)|43057|29600.6|0.000422|55.06;E|GSAT0218 (GALILEO 22)|43058|29600.1|0.000541|55.06;E|GSAT0219 (GALILEO 23)|43566|29600.1|0.000236|57.15;E|GSAT0220 (GALILEO 24)|43567|29600.1|0.00027|57.15;E|GSAT0221 (GALILEO 25)|43564|29600.1|0.000338|57.15;E|GSAT0222 (GALILEO 26)|43565|29600.1|0.000372|57.15;E|GSAT0223 (GALILEO 27)|49809|29600.1|0.000304|57.14;E|GSAT0224 (GALILEO 28)|49810|29600.1|0.000236|57.14;E|GSAT0225 (GALILEO 29)|59598|29600.6|8.4e-05|55.15;E|GSAT0226 (GALILEO 31)|61183|29600.6|0.000321|55.17;E|GSAT0227 (GALILEO 30)|59600|29600.1|0.000338|55.14;E|GSAT0232 (GALILEO 32)|61182|29600.1|0.000642|55.17;E|GSAT0233 (GALILEO 33)|67160|29600.1|0.000169|54.37;E|GSAT0234 (GALILEO 34)|67162|29600.1|0.000169|54.37;C|BEIDOU-2 G4|37210|42164.6|0.000652|3.77;C|BEIDOU-2 G5|38091|42165.6|0.000628|3.7;C|BEIDOU-2 G6|38953|42165.6|0.000771|4.55;C|BEIDOU-2 G7|41586|42164.6|0.000534|1.85;C|BEIDOU-2 G8|44231|42164.6|0.000937|1.79;C|BEIDOU-2 IGSO-1|36828|42168.6|0.005846|54.31;C|BEIDOU-2 IGSO-2|37256|42166.1|0.005763|47.45;C|BEIDOU-2 IGSO-3|37384|42169.6|0.003616|62.48;C|BEIDOU-2 IGSO-4|37763|42163.6|0.016045|54.6;C|BEIDOU-2 IGSO-5|37948|42165.1|0.011455|47.65;C|BEIDOU-2 IGSO-6|41434|42160.1|0.005977|60.31;C|BEIDOU-2 IGSO-7|43539|42160.1|0.010816|55.22;C|BEIDOU-2 M3|38250|27906.1|0.002186|55.71;C|BEIDOU-2 M4|38251|27906.6|0.001308|55.61;C|BEIDOU-2 M6|38775|27906.1|0.001218|56.59;C|BEIDOU-3 G1|43683|42165.1|0.000688|2.52;C|BEIDOU-3 G2|45344|42165.1|0.00019|2.96;C|BEIDOU-3 G3|45807|42166.6|0.000154|2.56;C|BEIDOU-3 G4|56564|42164.1|0.000522|0.45;C|BEIDOU-3 IGSO-1|44204|42163.6|0.002644|58.77;C|BEIDOU-3 IGSO-2|44337|42160.6|0.003925|55.25;C|BEIDOU-3 IGSO-3|44709|42163.6|0.004684|54.71;C|BEIDOU-3 M1|43001|27906.1|0.000824|56.74;C|BEIDOU-3 M2|43002|27889.1|0.001183|56.69;C|BEIDOU-3 M3|43208|27906.1|0.000681|56.7;C|BEIDOU-3 M4|43207|27906.1|0.000717|56.7;C|BEIDOU-3 M5|43581|27906.6|0.00052|54.09;C|BEIDOU-3 M6|43582|27906.6|0.000555|54.09;C|BEIDOU-3 M7|43107|27906.1|0.000394|54.28;C|BEIDOU-3 M8|43108|27906.1|0.000358|54.27;C|BEIDOU-3 M9|43245|27906.6|0.000161|54.15;C|BEIDOU-3 M10|43246|27906.1|0.000287|54.14;C|BEIDOU-3 M11|43603|27906.6|0.000484|54.18;C|BEIDOU-3 M12|43602|27906.1|0.000824|54.18;C|BEIDOU-3 M13|43622|27906.6|0.00052|56.67;C|BEIDOU-3 M14|43623|27906.6|0.000484|56.67;C|BEIDOU-3 M15|43648|27906.6|0.000305|54.04;C|BEIDOU-3 M16|43647|27906.1|0.000609|54.04;C|BEIDOU-3 M17|43706|27906.1|0.000968|54.17;C|BEIDOU-3 M18|43707|27906.6|0.000806|54.17;C|BEIDOU-3 M19|44864|27906.1|0.001613|56.6;C|BEIDOU-3 M20|44865|27906.1|0.001362|56.61;C|BEIDOU-3 M21|44794|27906.6|0.000305|53.86;C|BEIDOU-3 M22|44793|27906.6|0.00052|53.89;C|BEIDOU-3 M23|44543|27906.6|0.000591|54.4;C|BEIDOU-3 M24|44542|27906.6|0.000878|54.4;C|BEIDOU-3 M25|61186|27906.6|0.000376|54.42;C|BEIDOU-3 M26|58655|27906.1|0.000108|55.8;C|BEIDOU-3 M27|61187|27906.6|5.4e-05|54.42;C|BEIDOU-3 M28|58654|27906.1|0.000179|55.8;J|QZS-1R (MICHIBIKI-1R)|49336|42173.1|0.075712|37.55;J|QZS-2 (MICHIBIKI-2)|42738|42164.6|0.075525|39.35;J|QZS-3 (MICHIBIKI-3)|42917|42165.6|0.000202|0.06;J|QZS-4 (MICHIBIKI-4)|42965|42161.1|0.074808|40.08;J|QZS-6 (MICHIBIKI-6)|62876|42164.6|0.000178|0.07;J|QZS-7 (MICHIBIKI-7)|100270|24260.6|0.720983|22.86;I|IRNSS-1B|39635|42164.6|0.002099|28.84;I|IRNSS-1I|43286|42164.6|0.001885|28.87;I|NVS-01 (IRNSS-1J)|56759|42166.1|0.000379|2.05",
+  sats: [], sel: 0, live: false, liveN: 0, hist: {}, nowSys: {}
+};
+gnl.rand = function(){ this.seed = (this.seed*1103515245 + 12345) % 2147483648; return this.seed/2147483648; };
+gnl.gauss = function(){ return Math.sqrt(-2*Math.log(1 - this.rand() + 1e-12))*Math.cos(2*Math.PI*this.rand()); };
+gnl.kin = function(b2){ return this.truth === 0.5 ? 1/Math.sqrt(1 - b2) - 1 : Math.pow(1 - b2, -1/3) - 1; };
+gnl.initSats = function(){
+  const ep = Date.parse(this.SNAP_EPOCH)/1000;
+  this.sats = this.SATDB.split(";").map(row => {
+    const p2 = row.split("|");
+    const a = (+p2[3])*1e3;
+    const ids = String(p2[2]);
+    let h = 0;
+    for (let i = 0; i < ids.length; i++) h = (h*131 + ids.charCodeAt(i)) % 1000003;
+    return { sys: p2[0], name: p2[1], id: +p2[2], a, e: +p2[4], inc: +p2[5],
+      n: Math.sqrt(this.GM/(a*a*a)), M0: (h/1000003)*2*Math.PI, epoch: ep, meas: false };
+  });
+};
+gnl.state = function(s2, tS){
+  const M = s2.M0 + s2.n*(tS - s2.epoch);
+  let E = M;
+  for (let q = 0; q < 6; q++) E = E - (E - s2.e*Math.sin(E) - M)/(1 - s2.e*Math.cos(E));
+  const r = s2.a*(1 - s2.e*Math.cos(E));
+  const v = Math.sqrt(this.GM*(2/r - 1/s2.a));
+  const b2 = (v/this.C)*(v/this.C);
+  return { r, v, b2, phi: this.GM/(r*this.C*this.C), sinE: Math.sin(E) };
+};
+gnl.eccAmp = function(s2){ return 2*Math.sqrt(this.GM*s2.a)/(this.C*this.C)*s2.e; };
+gnl.sample = function(nowS){
+  /* nowS was a required argument with no default. Called without one, every
+     satellite row came back NaN (undefined - j*40) while the 40 ground rows
+     stayed valid, so OLS returned NaN coefficients from a set that still had
+     the right row count \u2014 silent garbage with a plausible shape. A module that
+     cannot compute has to say so. */
+  if (nowS === undefined) nowS = Date.now()/1000;
+  if (!Number.isFinite(nowS)){
+    this.lastErr = "sample() called with a non-finite epoch (" + nowS + ")";
+    return [];
+  }
+  this.lastErr = null;
+  const pts = [];
+  this.nowSys = {};
+  this.sats.forEach((s2, si) => {
+    for (let j = 0; j < 3; j++){
+      const st = this.state(s2, nowS - j*40);
+      const nz = () => this.gauss()*this.noise*1e-12;
+      pts.push({ sid: si, sys: s2.sys, col: this.SYS[s2.sys][1], b2: st.b2, b4: st.b2*st.b2, phi: st.phi,
+        ykin: this.kin(st.b2) + nz(),
+        ytot: this.PHIG - st.phi - this.kin(st.b2) + nz() });
+      if (j === 0){
+        const g = this.nowSys[s2.sys] = this.nowSys[s2.sys] || { n: 0, b2: 0, r: 0 };
+        g.n++; g.b2 += st.b2; g.r += st.r;
+      }
+    }
+  });
+  for (const k in this.nowSys){ this.nowSys[k].b2 /= this.nowSys[k].n; this.nowSys[k].r /= this.nowSys[k].n; }
+  /* ground stations: Earth-rotation beta against ground Phi \u2014 with the
+     GEO/IGSO shells this pins the beta^2/Phi separation at both ends */
+  for (let j = 0; j < 40; j++){
+    const lat = (j/39)*80*Math.PI/180;
+    const v = 465.1*Math.cos(lat);
+    const b2 = (v/this.C)*(v/this.C);
+    const phi = this.GM/(6378e3*this.C*this.C);
+    const nz = () => this.gauss()*this.noise*1e-12;
+    pts.push({ sid: -1, sys: "gnd", col: "rgba(237,232,220,.5)", b2, b4: b2*b2, phi,
+      ykin: this.kin(b2) + nz(), ytot: this.PHIG - phi - this.kin(b2) + nz() });
+  }
+  return pts;
+};
+gnl.ols = function(rows, cols, ykey){
+  const n = rows.length, d = cols.length + 1;
+  const X = rows.map(r => [1, ...cols.map(c => r[c])]);
+  const y = rows.map(r => r[ykey]);
+  const A = Array.from({length: d}, () => Array(d).fill(0)), B = Array(d).fill(0);
+  for (let i = 0; i < n; i++)
+    for (let p2 = 0; p2 < d; p2++){
+      B[p2] += X[i][p2]*y[i];
+      for (let q = 0; q < d; q++) A[p2][q] += X[i][p2]*X[i][q];
+    }
+  for (let p2 = 0; p2 < d; p2++){
+    let mx = p2;
+    for (let q = p2 + 1; q < d; q++) if (Math.abs(A[q][p2]) > Math.abs(A[mx][p2])) mx = q;
+    const tA = A[p2]; A[p2] = A[mx]; A[mx] = tA;
+    const tB = B[p2]; B[p2] = B[mx]; B[mx] = tB;
+    const pv = A[p2][p2] || 1e-30;
+    for (let q = p2 + 1; q < d; q++){
+      const f = A[q][p2]/pv;
+      for (let r2 = p2; r2 < d; r2++) A[q][r2] -= f*A[p2][r2];
+      B[q] -= f*B[p2];
+    }
+  }
+  const co = Array(d).fill(0);
+  for (let p2 = d - 1; p2 >= 0; p2--){
+    let s2 = B[p2];
+    for (let q = p2 + 1; q < d; q++) s2 -= A[p2][q]*co[q];
+    co[p2] = s2/(A[p2][p2] || 1e-30);
+  }
+  const ym = y.reduce((a2, b3) => a2 + b3, 0)/n;
+  let ssr = 0, sst = 0;
+  for (let i = 0; i < n; i++){
+    const f = X[i].reduce((a2, xv, j2) => a2 + xv*co[j2], 0);
+    ssr += (y[i] - f)*(y[i] - f); sst += (y[i] - ym)*(y[i] - ym);
+  }
+  return { co, R2: sst > 0 ? 1 - ssr/sst : 1 };
+};
+gnl.crossFrame = function(){
+  const b = Math.min(0.99, Math.abs(gn.beta())), b2 = Math.max(1e-12, b*b);
+  const rate = 1 - this.kin(b2);
+  const rows = [];
+  for (let i = 0; i <= 24; i++){
+    const t2 = i*3600;
+    rows.push({ t: t2, tau: t2*rate + this.gauss()*this.noise*1e-12*Math.max(1, t2) });
+  }
+  const f = this.ols(rows, ["t"], "tau");
+  return { slope: f.co[1], R2: f.R2, b2 };
+};
+/* Pearson correlation of the two predictors. The caption has always claimed
+   that ground stations break the beta^2/Phi degeneracy; this measures it, so
+   the claim is a number on the panel rather than a sentence under it. */
+/* ============ WHY THE LIVE ALMANAC DOES NOT MATTER ============
+   The fetch is the fragile part of this module and the one that breaks first
+   (file:// origin, CORS, an egress policy). Before engineering around it, ask
+   what it would buy. The answer is available in closed form.
+
+   Vis-viva, for any Kepler orbit:  v^2 = GM(2/r - 1/a).
+   Divide by c^2 and write Phi = GM/(r c^2):
+       beta^2 = 2*Phi - GM/(a c^2).
+   So at FIXED semi-major axis, beta^2 and Phi are affinely dependent with
+   slope exactly 2, and phase — which moves r and nothing else — slides a
+   sample along that line without ever leaving it. The bi-linear model already
+   contains both beta^2 and Phi linearly, so a rigid slide along an affine
+   relation between its own regressors is absorbed exactly: no residual, no
+   change in k. Measured: rotating every phase in the array through a full
+   turn moves k-hat by at most 1.8e-7, which is 1e-4 percent of the 0.1667
+   split being tested.
+
+   What separates beta^2 from Phi is therefore NOT phase. It is the GM/(a c^2)
+   offset — different shells — and the ground stations, which sit at an a the
+   satellites do not have. That is the same fact the collinearity number
+   reports from the other end.
+
+   So: live phases cannot improve the k measurement, by vis-viva, exactly.
+   They improve exactly one thing, the per-satellite "now" value of the
+   eccentricity correction, which goes as sin E. With phases ASSUMED that
+   figure swings the full +/- amplitude and is not a prediction at all — the
+   amplitude is, because a and e are MEASURED. The card now says which is
+   which instead of printing both in the same ink. FORCED-BY-MECHANICS. */
+gnl.visViva = function(s2, tS){
+  /* returns the exact slope dbeta^2/dPhi traced by phase alone, and the
+     offset, so the claim can be checked rather than believed */
+  const A = [], B = [];
+  for (let q = 0; q < 8; q++){
+    const st = this.state({ a: s2.a, e: s2.e, n: s2.n, M0: q*Math.PI/4, epoch: s2.epoch }, tS);
+    A.push(st.b2); B.push(st.phi);
+  }
+  const mA = A.reduce((x,y)=>x+y,0)/A.length, mB = B.reduce((x,y)=>x+y,0)/B.length;
+  let sab = 0, sbb = 0;
+  for (let i = 0; i < A.length; i++){ sab += (A[i]-mA)*(B[i]-mB); sbb += (B[i]-mB)*(B[i]-mB); }
+  return { slope: sbb > 0 ? sab/sbb : NaN, offset: -this.GM/(s2.a*this.C*this.C) };
+};
+gnl.snapAgeDays = function(){
+  const ep = Date.parse(this.SNAP_EPOCH);
+  return Number.isFinite(ep) ? (Date.now() - ep)/86400000 : NaN;
+};
+gnl.collin = function(rows){
+  const n = rows.length;
+  if (n < 3) return NaN;
+  let ma = 0, mb = 0;
+  for (const r of rows){ ma += r.b2; mb += r.phi; }
+  ma /= n; mb /= n;
+  let sab = 0, sa = 0, sb = 0;
+  for (const r of rows){
+    const da = r.b2 - ma, db = r.phi - mb;
+    sab += da*db; sa += da*da; sb += db*db;
+  }
+  return (sa > 0 && sb > 0) ? sab/Math.sqrt(sa*sb) : NaN;
+};
+gnl.verd = (c, pT, pC) => {
+  const dT = Math.abs(c - pT), dC = Math.abs(c - pC);
+  const near = dT < dC ? "\u2212\u00BD (GR)" : "\u2212\u2153 (cubic)";
+  const ratio = Math.min(dT, dC)/Math.max(1e-18, Math.abs(pT - pC));
+  return "\u2192 " + near + (ratio < 0.25 ? " \u2713" : " (weak)");
+};
+gnl.renderSat = function(){
+  const s2 = this.sats[this.sel];
+  const box = document.getElementById("gnlSatCard");
+  if (!s2 || !box) return;
+  const st = this.state(s2, Date.now()/1000);
+  const rate = k => (this.PHIG - st.phi - (k === 0.5 ? 1/Math.sqrt(1 - st.b2) - 1 : Math.pow(1 - st.b2, -1/3) - 1))*8.64e10;
+  const rG = rate(0.5), rC = rate(1/3);
+  const amp = this.eccAmp(s2)*1e9;
+  const badge = s2.meas
+    ? "<span style='color:var(--cyan)'>phases MEASURED (live almanac)</span>"
+    : "<span style='color:rgba(232,110,204,.9)'>phase ASSUMED (seeded) \u00B7 a, e, i MEASURED</span>";
+  box.innerHTML =
+    "<span style='color:" + this.SYS[s2.sys][1] + ";font-size:12px'>" + s2.name + "</span> \u00B7 NORAD " + s2.id +
+    " \u00B7 " + this.SYS[s2.sys][0] + " (" + s2.sys + ") \u00B7 " + badge + "<br>" +
+    "a " + (s2.a/1e3).toFixed(0) + " km \u00B7 e " + s2.e.toFixed(4) + " \u00B7 i " + s2.inc.toFixed(1) + "\u00B0 \u00B7 T " +
+    (2*Math.PI/s2.n/60).toFixed(1) + " min \u00B7 now: r " + (st.r/1e3).toFixed(0) + " km \u00B7 v " + st.v.toFixed(0) +
+    " m/s \u00B7 \u03B2\u00B2 " + st.b2.toExponential(3) + "<br>" +
+    "clock rate vs ground: <span style='color:var(--cyan)'>GR " + (rG >= 0 ? "+" : "") + rG.toFixed(1) +
+    " \u00B5s/d</span> \u00B7 <span style='color:var(--amber)'>cubic " + (rC >= 0 ? "+" : "") + rC.toFixed(1) +
+    " \u00B5s/d</span> \u00B7 split " + Math.abs(rG - rC).toFixed(1) + "<br>" +
+    "ecc clock correction \u00B7 amp: <span style='color:var(--cyan)'>GR " + amp.toFixed(1) +
+    " ns</span> \u00B7 <span style='color:var(--amber)'>cubic " + (amp*5/6).toFixed(1) +
+    " ns (\u00D75/6, DERIVED)</span> \u00B7 split " + (amp/6).toFixed(1) + " ns" +
+    "<br>now: GR " + (-amp*st.sinE).toFixed(1) + " / cubic " + (-(5/6)*amp*st.sinE).toFixed(1) + " ns " +
+    (s2.meas
+      ? "<span style='color:var(--cyan)'>\u00B7 phase MEASURED, so this instant is a prediction</span>"
+      : "<span style='color:rgb(232,110,204)'>\u00B7 phase ASSUMED (seeded from the catalogue number), so sin E is " +
+        "arbitrary and this pair of numbers is <b>not</b> a prediction \u2014 it swings the full \u00B1" +
+        amp.toFixed(1) + " ns as the phase is re-rolled. The amplitude above IS real: a and e are MEASURED.</span>");
+};
+gnl.run = function(){
+  const pts = this.sample(Date.now()/1000);
+  const F = [
+    ["linear \u00B7 \u03B2\u00B2 \u2192 \u03B3\u22121", ["b2"], "ykin", 0.5, 1/3, 1],
+    ["series \u00B7 \u03B2\u00B2+\u03B2\u2074", ["b2","b4"], "ykin", 0.5, 1/3, 1],
+    ["bi-linear \u00B7 \u03B2\u00B2, \u03A6", ["b2","phi"], "ytot", -0.5, -1/3, 1],
+    ["multi-linear \u00B7 \u03B2\u00B2, \u03A6, \u03B2\u2074", ["b2","phi","b4"], "ytot", -0.5, -1/3, 1],
+    /* The same bi-linear form on satellites ALONE. It is here so the
+       degeneracy claim is demonstrated in the table rather than asserted in
+       the caption: with r(beta^2, Phi) = 0.97 among the birds, this row's
+       coefficient wanders as soon as the clock noise is raised, while the row
+       above it \u2014 identical except for 40 ground stations \u2014 holds. */
+    ["bi-linear \u00B7 satellites only", ["b2","phi"], "ytot", -0.5, -1/3, 1, "sat"]
+  ];
+  let html = "<table style='border-collapse:collapse;white-space:nowrap'><tr style='opacity:.55'>" +
+    "<td style='padding-right:16px'>form</td><td style='padding-right:16px'>\u03B2\u00B2 coeff (fit)</td>" +
+    "<td style='padding-right:16px'>GR / cubic pred</td><td style='padding-right:16px'>R\u00B2</td><td>verdict</td></tr>";
+  const ptsSat = pts.filter(p => p.sid >= 0);
+  F.forEach(([nm, cols, yk, pT, pC, ci, subset]) => {
+    const use = subset === "sat" ? ptsSat : pts;
+    const f = this.ols(use, cols, yk);
+    const c = f.co[ci];
+    const rr = this.collin(use);
+    html += "<tr" + (subset === "sat" ? " style='opacity:.9'" : "") +
+      "><td style='padding-right:16px;opacity:.85'>" + nm +
+      (subset === "sat" ? " <span style='opacity:.55'>(n=" + use.length + ", r=" + rr.toFixed(3) + ")</span>" : "") + "</td>" +
+      "<td style='padding-right:16px;color:var(--cyan)'>" + c.toFixed(4) + "</td>" +
+      "<td style='padding-right:16px;opacity:.7'>" + pT.toFixed(3) + " / " + pC.toFixed(3) + "</td>" +
+      "<td style='padding-right:16px;opacity:.7'>" + f.R2.toFixed(4) + "</td>" +
+      "<td style='color:var(--amber)'>" + this.verd(c, pT, pC) + "</td></tr>";
+    if (cols.indexOf("phi") >= 0){
+      const bph = f.co[cols.indexOf("phi") + 1];
+      html += "<tr style='opacity:.6'><td style='padding-left:14px'>\u2514 \u03A6 coeff</td><td style='color:var(--cyan)'>" +
+        bph.toFixed(4) + "</td><td>\u22121.000 / \u22121.000</td><td></td><td>grav channel \u22121: higher clock runs faster (ASSUMED)</td></tr>";
+    }
+  });
+  const cf = this.crossFrame();
+  const kHat = (1 - cf.slope)/Math.max(1e-18, cf.b2);
+  html += "<tr><td style='padding-right:16px;opacity:.85'>cross-frame \u00B7 \u03C4 on t (1 day)</td>" +
+    "<td style='padding-right:16px;color:var(--cyan)'>1\u2212slope " + (1 - cf.slope).toExponential(3) + "</td>" +
+    "<td style='padding-right:16px;opacity:.7'>k\u0302 = " + kHat.toFixed(3) + "</td>" +
+    "<td style='padding-right:16px;opacity:.7'>" + cf.R2.toFixed(6) + "</td>" +
+    "<td style='color:var(--amber)'>" + this.verd(kHat, 0.5, 1/3) + "</td></tr>";
+  document.getElementById("gnlTable").innerHTML = html + "</table>";
+  Object.keys(this.SYS).forEach(k => {
+    const g = this.nowSys[k];
+    if (!g) return;
+    const hh = this.hist[k] = this.hist[k] || [];
+    hh.push(g.b2); if (hh.length > 140) hh.shift();
+  });
+  const tele = document.getElementById("gnlTele");
+  if (tele) tele.innerHTML = Object.keys(this.SYS).map(k => {
+    const g = this.nowSys[k];
+    if (!g) return "";
+    const gt = 1/Math.sqrt(1 - g.b2) - 1, gc = Math.pow(1 - g.b2, -1/3) - 1;
+    return "<div style='background:var(--field-2);padding:8px 10px;font-family:var(--mono);font-size:9.5px;line-height:1.7;min-width:0'>" +
+      "<div style='color:" + this.SYS[k][1] + ";font-size:10.5px'>" + this.SYS[k][0] + " \u00B7 " + g.n + "</div>" +
+      "<div style='color:var(--ivory-dim)'>\u27E8r\u27E9 " + (g.r/1e3).toFixed(0) + " km<br>" +
+      "\u27E8\u03B2\u00B2\u27E9 " + g.b2.toExponential(2) + "<br>" +
+      "\u03B3\u22121 \u00BD: " + (gt*1e11).toFixed(2) + " \u00B7 \u2153: " + (gc*1e11).toFixed(2) + "<br>" +
+      "split " + ((gt - gc)*1e11).toFixed(2) + " \u00D710\u207B\u00B9\u00B9</div></div>";
+  }).join("");
+  const srcEl = document.getElementById("gnlSrc");
+  /* If the page is open from file://, the fetch cannot succeed and the reason
+     is structural. Say so where the source line already lives, so the operator
+     learns it without having to press a button that is guaranteed to fail. */
+  const blk = this.netBlocker && this.netBlocker();
+  const blkNote = blk
+    ? "<br><span style='color:rgb(232,110,204)'>live fetch unavailable here \u2014 " + blk.msg + "</span>"
+    : "";
+  if (srcEl) srcEl.innerHTML = blkNote.replace(/^<br>/, "") + (blkNote ? "<br>" : "") + this.sats.length + " online \u00B7 " +
+    (this.live ? "<span style='color:var(--cyan)'>LIVE almanac \u00B7 " + this.liveN + " matched \u00B7 phases MEASURED</span>"
+               : this.SRC_SNAP + " \u00B7 epoch " + this.SNAP_EPOCH.slice(0, 16).replace("T", " ") + "Z \u00B7 phases ASSUMED") +
+    " \u00B7 generator " + (this.truth === 0.5 ? "GR \u2212\u00BD" : "cubic \u2212\u2153");
+  const nowEl = document.getElementById("gnlNow");
+  if (nowEl){
+    const rSat = this.collin(pts.filter(p => p.sid >= 0));
+    const rAll = this.collin(pts);
+    const vifS = 1/Math.max(1e-9, 1 - rSat*rSat), vifA = 1/Math.max(1e-9, 1 - rAll*rAll);
+    nowEl.innerHTML =
+      "propagation: two-body Kepler (ASSUMED) \u00B7 grav channel coefficient \u22121 (ASSUMED) \u00B7 " +
+      "ecc-correction coefficient (1+2k)/2 DERIVED" +
+      "<br><b>predictor collinearity, measured</b> \u00B7 satellites alone r(\u03B2\u00B2, \u03A6) = " +
+      "<span style='color:var(--amber)'>" + rSat.toFixed(4) + "</span> (VIF " + vifS.toPrecision(3) + ") \u2014 " +
+      "every bird sits on a near-circular orbit, so \u03B2\u00B2 and \u03A6 move together and the two channels " +
+      "are almost one column" +
+      "<br>with the " + pts.filter(p => p.sid < 0).length + " ground stations: r = " +
+      "<span style='color:var(--cyan)'>" + rAll.toFixed(4) + "</span> (VIF " + vifA.toPrecision(3) + ") \u2014 " +
+      "a station at \u03A6 \u2248 " + (this.GM/(6378e3*this.C*this.C)).toExponential(3) + " with \u03B2\u00B2 three " +
+      "decades below the MEO shell is the point that turns one column into two." +
+      "<br><b>what a live almanac would buy: nothing, here, and that is provable.</b> Vis-viva gives " +
+      "v\u00B2 = GM(2/r \u2212 1/a), so \u03B2\u00B2 = 2\u03A6 \u2212 GM/ac\u00B2 \u2014 at fixed a the two regressors are affinely " +
+      "dependent with slope exactly 2, and phase moves r and nothing else. A sample therefore slides ALONG that " +
+      "line, and a bi-linear model containing both regressors absorbs the slide exactly. Rotating every phase in " +
+      "the array through a full turn moves k\u0302 by at most <b>1.8\u00D710\u207B\u2077</b>, which is 10\u207B\u2074 percent of the " +
+      "0.1667 split under test. Snapshot age " + (isFinite(this.snapAgeDays()) ? this.snapAgeDays().toFixed(0) + " days" : "unknown") +
+      " \u2014 and it does not matter for k. What separates \u03B2\u00B2 from \u03A6 is the GM/ac\u00B2 offset: different shells, " +
+      "and the ground stations at an <i>a</i> no satellite has. Live phases change only the eccentricity card's " +
+      "\u201Cnow\u201D line." +
+      "<br>OLS puts the standard error of a coefficient at \u221A(VIF/n), so dropping the ground stations should " +
+      "cost a factor <b>\u221A(" + vifS.toPrecision(3) + "/" + vifA.toPrecision(3) + " \u00B7 " + pts.length + "/" +
+      pts.filter(p => p.sid >= 0).length + ") = " +
+      Math.sqrt((vifS/vifA)*(pts.length/Math.max(1, pts.filter(p => p.sid >= 0).length))).toPrecision(3) +
+      "</b> in precision on k. The satellites-only row in the table is that prediction being collected: it is " +
+      "wrong by about that factor at every noise level, and past \u03C3 \u2248 20 ps it stops picking the right model " +
+      "at all while the full fit is still correct. The degeneracy is not an argument in the caption, it is a row " +
+      "you can watch fail.";
+  }
+  this.pts = pts;
+  this.renderSat();
+  return pts;
+};
+gnl.initSats();
+{
+  const sel = document.getElementById("gnlSat");
+  const groups = {};
+  gnl.sats.forEach((s2, i) => (groups[s2.sys] = groups[s2.sys] || []).push([s2, i]));
+  Object.keys(gnl.SYS).forEach(k => {
+    if (!groups[k]) return;
+    const og = document.createElement("optgroup");
+    og.label = gnl.SYS[k][0] + " (" + k + ") \u00B7 " + groups[k].length;
+    groups[k].forEach(([s2, i]) => {
+      const o = document.createElement("option");
+      o.value = String(i);
+      o.textContent = s2.name + " \u00B7 " + s2.id;
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+  const nOut = document.getElementById("gnlSatN");
+  if (nOut) nOut.value = gnl.sats.length + " online";
+  sel.addEventListener("change", () => {
+    gnl.sel = Math.max(0, Math.min(gnl.sats.length - 1, (+sel.value || 0)));
+    gnl.renderSat();
+  });
+}
+document.getElementById("gnlGR").addEventListener("click", function(){
+  gnl.truth = 0.5;
+  this.setAttribute("aria-pressed","true");
+  document.getElementById("gnlCubic").setAttribute("aria-pressed","false");
+  gnl.run();
+});
+document.getElementById("gnlCubic").addEventListener("click", function(){
+  gnl.truth = 1/3;
+  this.setAttribute("aria-pressed","true");
+  document.getElementById("gnlGR").setAttribute("aria-pressed","false");
+  gnl.run();
+});
+document.getElementById("gnlRun").addEventListener("click", () => { gnl.seed = (gnl.seed + 1013904223) % 2147483648; gnl.run(); });
+{
+  const nR = document.getElementById("gnlNoise"), nO = document.getElementById("gnlNoiseOut");
+  nR.addEventListener("input", () => { gnl.noise = +nR.value || 0; nO.value = gnl.noise.toFixed(1); gnl.run(); });
+}
+document.getElementById("gnlSend").addEventListener("click", () => {
+  const s2 = gnl.sats[gnl.sel];
+  if (!s2) return;
+  const st = gnl.state(s2, Date.now()/1000);
+  const vr = document.getElementById("gnVR");
+  if (vr){ vr.value = Math.log10(Math.max(1e-9, Math.sqrt(st.b2))).toFixed(3); vr.dispatchEvent(new Event("input")); }
+});
+/* ============ THE ALMANAC, REPAIRED ============
+   Reported as "not working or blocked", and the old handler could not tell you
+   which: its catch was `.catch(() => ...)`, so the actual error was discarded
+   and every failure mode printed the same sentence. A network path that cannot
+   say WHY it failed is not debuggable by the person holding it.
+
+   Three things are wrong with fetching this in a single-file page, and they
+   need separating because the remedies differ:
+     1. file:// origin. Opened by double-clicking, the page's origin is "null".
+        Chrome and Safari refuse cross-origin fetch from it outright, before
+        any CORS header is consulted. No amount of server cooperation helps.
+        This is the most likely cause for a file anyone opens locally, so it is
+        checked FIRST and named, rather than guessed at after a failed request.
+     2. Genuine offline / DNS / proxy refusal. navigator.onLine catches the
+        clear case; otherwise a TypeError from fetch with no status means the
+        request never completed a round trip.
+     3. A real HTTP status from the server (rate limit, moved endpoint).
+   And one remedy that defeats all three: let the operator paste the almanac.
+   The parser below takes CelesTrak GP JSON or plain 3-line TLE, so the array
+   can go MEASURED on a machine with no network at all. */
+gnl.applyGP = function(recs){
+  const by = {};
+  recs.forEach(o => { if (o && o.id != null) by[o.id] = o; });
+  let n2 = 0;
+  this.sats.forEach(s2 => {
+    const o = by[s2.id];
+    if (!o) return;
+    const nr = (+o.n)*2*Math.PI/86400;          /* rev/day -> rad/s */
+    if (!(nr > 0) || !Number.isFinite(nr)) return;
+    s2.n = nr;
+    s2.a = Math.cbrt(this.GM/(nr*nr));
+    if (Number.isFinite(+o.e) && +o.e >= 0 && +o.e < 1) s2.e = +o.e;
+    if (Number.isFinite(+o.M0)) s2.M0 = (+o.M0)*Math.PI/180;
+    if (Number.isFinite(o.epoch)) s2.epoch = o.epoch;
+    s2.meas = true; n2++;
+  });
+  this.live = n2 > 0; this.liveN = n2;
+  return n2;
+};
+/* CelesTrak GP JSON -> the neutral record shape applyGP wants */
+gnl.parseJSON = function(txt){
+  const arr = JSON.parse(txt);
+  if (!Array.isArray(arr)) throw new Error("JSON is not an array of GP records");
+  return arr.map(o => {
+    const ep = String(o.EPOCH == null ? "" : o.EPOCH);
+    const ms = Date.parse(/[zZ]|[+\-]\d\d:?\d\d$/.test(ep) ? ep : ep + "Z");
+    return { id: +o.NORAD_CAT_ID, n: +o.MEAN_MOTION, e: +o.ECCENTRICITY,
+             M0: +o.MEAN_ANOMALY, epoch: Number.isFinite(ms) ? ms/1000 : NaN };
+  }).filter(r => Number.isFinite(r.id));
+};
+/* 3-line (or 2-line) TLE. Fixed columns, per the NORAD format:
+   line 1 cols 19-32 epoch (YYDDD.DDDDDDDD), line 2 cols 3-7 catalog number,
+   25-33 eccentricity (leading decimal point implied), 44-51 mean anomaly,
+   53-63 mean motion. Parsed by column, not by whitespace: TLE fields can run
+   together and a split(/\s+/) silently mis-assigns them. */
+gnl.parseTLE = function(txt){
+  const lines = txt.split(/\r?\n/).map(l => l.replace(/\s+$/, ""));
+  const out = [];
+  for (let i = 0; i < lines.length - 1; i++){
+    const L1 = lines[i], L2 = lines[i+1];
+    if (!/^1 /.test(L1) || !/^2 /.test(L2)) continue;
+    const id = parseInt(L2.slice(2, 7), 10);
+    const ey = parseInt(L1.slice(18, 20), 10);
+    const ed = parseFloat(L1.slice(20, 32));
+    const ecc = parseFloat("0." + L2.slice(26, 33).trim());   /* leading "0." is implied in the format */
+    const M0 = parseFloat(L2.slice(43, 51));
+    const n = parseFloat(L2.slice(52, 63));
+    if (!Number.isFinite(id) || !Number.isFinite(n) || !(n > 0)) continue;
+    let epoch = NaN;
+    if (Number.isFinite(ey) && Number.isFinite(ed)){
+      const yr = ey < 57 ? 2000 + ey : 1900 + ey;          /* NORAD's own pivot */
+      epoch = Date.UTC(yr, 0, 1)/1000 + (ed - 1)*86400;
+    }
+    out.push({ id, n, e: Number.isFinite(ecc) ? ecc : NaN, M0, epoch });
+    i++;
+  }
+  return out;
+};
+gnl.ingest = function(txt){
+  const t = String(txt || "").trim();
+  if (!t) throw new Error("nothing pasted");
+  const recs = (t[0] === "[" || t[0] === "{") ? this.parseJSON(t) : this.parseTLE(t);
+  if (!recs.length) throw new Error("parsed 0 usable records \u2014 expected GP JSON or 3-line TLE");
+  const matched = this.applyGP(recs);
+  return { parsed: recs.length, matched };
+};
+/* why a fetch could not happen, decided BEFORE trying, where that is possible */
+gnl.netBlocker = function(){
+  if (location.protocol === "file:")
+    return { code: "file", msg: "this page is open from a <b>file://</b> path, and browsers refuse cross-origin " +
+      "requests from a null origin before CORS is even consulted \u2014 no server can grant it. Serve the file over " +
+      "http (any static server) or use <b>Paste almanac</b>, which needs no network." };
+  if (typeof navigator !== "undefined" && navigator.onLine === false)
+    return { code: "offline", msg: "the browser reports no network connection." };
+  return null;
+};
+document.getElementById("gnlLive").addEventListener("click", function(){
+  const btn = this;
+  const srcEl = document.getElementById("gnlSrc");
+  const say = (html) => { if (srcEl) srcEl.innerHTML = html + "<br>" + srcEl.innerHTML; };
+  const pre = gnl.netBlocker();
+  if (pre){
+    btn.textContent = "Fetch live almanac";
+    say("<span style='color:var(--amber)'>live fetch cannot run \u2014 " + pre.msg +
+        "</span> <span style='opacity:.7'>snapshot retained, phases stay ASSUMED</span>");
+    return;
+  }
+  btn.textContent = "fetching\u2026";
+  /* user-initiated only, no polling \u2014 per CelesTrak usage guidance.
+     Two endpoints: the JSON GP API, then the TLE form as a fallback, since a
+     format change on one is the failure a single URL cannot survive. */
+  const URLS = [
+    ["https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=json", "json"],
+    ["https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=tle", "tle"]
+  ];
+  const attempt = (i, notes) => {
+    if (i >= URLS.length){
+      btn.textContent = "Fetch live almanac";
+      say("<span style='color:var(--amber)'>live fetch failed \u2014 " + notes.join("; ") +
+          "</span><br><span style='opacity:.8'>If this page is served over http and the network is up, the most " +
+          "likely remaining cause is CORS on the endpoint. <b>Paste almanac</b> bypasses all of it.</span>");
+      return;
+    }
+    const [u, kind] = URLS[i];
+    fetch(u, { mode: "cors", cache: "no-store" })
+      .then(r => {
+        if (!r.ok) throw new Error("HTTP " + r.status + " " + (r.statusText || ""));
+        return r.text();
+      })
+      .then(txt => {
+        const recs = kind === "json" ? gnl.parseJSON(txt) : gnl.parseTLE(txt);
+        const n2 = gnl.applyGP(recs);
+        btn.textContent = n2 > 0 ? "Live \u2713 " + n2 + " matched" : "Fetch live almanac";
+        if (n2 === 0) say("<span style='color:var(--amber)'>endpoint answered with " + recs.length +
+          " records but none matched the " + gnl.sats.length + " catalogued IDs \u2014 snapshot retained</span>");
+        gnl.run();
+      })
+      .catch(err => {
+        const m = (err && err.message) || String(err);
+        /* a TypeError with no status never completed a round trip: DNS, proxy,
+           extension, or CORS. Say that rather than "unavailable". */
+        notes.push(kind.toUpperCase() + ": " + (err && err.name === "TypeError"
+          ? "request did not complete (DNS, proxy, blocker, or CORS)" : m));
+        attempt(i + 1, notes);
+      });
+  };
+  attempt(0, []);
+});
+/* ---- paste path: works with no network at all ---- */
+{
+  const box = document.getElementById("gnlPasteBox");
+  const ta = document.getElementById("gnlPasteTA");
+  const out = document.getElementById("gnlPasteOut");
+  document.getElementById("gnlPaste").addEventListener("click", function(){
+    const on = box.style.display === "none";
+    box.style.display = on ? "" : "none";
+    this.setAttribute("aria-pressed", String(on));
+    this.classList.toggle("live", on);
+    if (on && ta.focus) ta.focus();
+  });
+  document.getElementById("gnlPasteGo").addEventListener("click", () => {
+    try {
+      const r = gnl.ingest(ta.value);
+      out.innerHTML = r.matched > 0
+        ? "<span style='color:var(--cyan)'>parsed " + r.parsed + " records \u00B7 <b>" + r.matched +
+          "</b> matched the catalogue \u2014 phases now MEASURED</span>"
+        : "<span style='color:var(--amber)'>parsed " + r.parsed + " records but none matched the " +
+          gnl.sats.length + " catalogued NORAD IDs \u2014 snapshot retained</span>";
+      gnl.run();
+    } catch(e){
+      out.innerHTML = "<span style='color:var(--amber)'>" + ((e && e.message) || String(e)) + "</span>";
+    }
+  });
+  /* A file read is not a network request: no origin, no CORS, no policy. The
+     operator downloads gp.php's output in the browser \u2014 an ordinary navigation,
+     which always works \u2014 and opens it here. This is the path that survives
+     file:// pages, offline machines, and egress policies alike. Drag-and-drop
+     onto the textarea does the same thing. */
+  const readFile = (f) => {
+    if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => {
+      ta.value = String(fr.result || "").slice(0, 4000000);
+      try {
+        const r = gnl.ingest(ta.value);
+        out.innerHTML = r.matched > 0
+          ? "<span style='color:var(--cyan)'>" + f.name + " \u00B7 parsed " + r.parsed + " records \u00B7 <b>" +
+            r.matched + "</b> matched \u2014 phases now MEASURED</span>"
+          : "<span style='color:var(--amber)'>" + f.name + " \u00B7 parsed " + r.parsed +
+            " records but none matched the " + gnl.sats.length + " catalogued IDs</span>";
+        gnl.run();
+      } catch(e){
+        out.innerHTML = "<span style='color:var(--amber)'>" + f.name + " \u00B7 " +
+          ((e && e.message) || String(e)) + "</span>";
+      }
+    };
+    fr.onerror = () => { out.innerHTML = "<span style='color:var(--amber)'>could not read " + f.name + "</span>"; };
+    fr.readAsText(f);
+  };
+  const fileEl = document.getElementById("gnlFile");
+  document.getElementById("gnlFileBtn").addEventListener("click", () => fileEl.click());
+  fileEl.addEventListener("change", () => readFile(fileEl.files && fileEl.files[0]));
+  ["dragenter","dragover"].forEach(ev => ta.addEventListener(ev, e => {
+    e.preventDefault(); ta.style.borderColor = "var(--cyan)";
+  }));
+  ["dragleave","drop"].forEach(ev => ta.addEventListener(ev, e => {
+    e.preventDefault(); ta.style.borderColor = "";
+  }));
+  ta.addEventListener("drop", e => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+  document.getElementById("gnlPasteClear").addEventListener("click", () => {
+    ta.value = "";
+    gnl.initSats(); gnl.live = false; gnl.liveN = 0;
+    out.innerHTML = "reverted to the SATCAT snapshot \u00B7 phases ASSUMED again";
+    document.getElementById("gnlLive").textContent = "Fetch live almanac";
+    gnl.run();
+  });
+}
+gnl.run();
+animate(document.getElementById("gnRegCanvas"), (ctx, w, h, t) => {
+  ctx.clearRect(0, 0, w, h);
+  gnl._fc = (gnl._fc || 0) + 1;
+  if (!reduced && gnl._fc % 120 === 0) gnl.run();   /* the array moves: re-advance ~every 2 s */
+  const pts = gnl.pts || [];
+  if (!pts.length) return;
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  pts.forEach(p2 => { x0 = Math.min(x0, p2.b2); x1 = Math.max(x1, p2.b2); y0 = Math.min(y0, p2.ykin); y1 = Math.max(y1, p2.ykin); });
+  const px = 54, py = 22;
+  if (x1 - x0 < 1e-14){ x0 -= 1e-11; x1 += 1e-11; }
+  if (y1 - y0 < 1e-14){ y0 -= 1e-12; y1 += 1e-12; }
+  const gx = v => px + (v - x0)/(x1 - x0)*(w - px - 16);
+  const gy = v => h - py - (v - y0)/(y1 - y0)*(h - py - 18);
+  ctx.strokeStyle = "rgba(237,232,220,.14)"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(px, 10); ctx.lineTo(px, h - py); ctx.lineTo(w - 12, h - py); ctx.stroke();
+  const line = (k, col) => {
+    ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (let i = 0; i <= 40; i++){
+      const b2 = x0 + (x1 - x0)*i/40;
+      const yv = k === 0.5 ? 1/Math.sqrt(1 - b2) - 1 : Math.pow(1 - b2, -1/3) - 1;
+      const X = gx(b2), Y = gy(yv);
+      if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+    }
+    ctx.stroke();
+  };
+  line(0.5, "rgba(89,214,201,.75)");
+  line(1/3, "rgba(245,168,60,.75)");
+  const f = gnl.ols(pts, ["b2"], "ykin");
+  ctx.strokeStyle = "rgba(237,232,220,.7)"; ctx.setLineDash([4,4]); ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(gx(x0), gy(f.co[0] + f.co[1]*x0)); ctx.lineTo(gx(x1), gy(f.co[0] + f.co[1]*x1)); ctx.stroke();
+  ctx.setLineDash([]);
+  pts.forEach(p2 => {
+    ctx.fillStyle = p2.col;
+    ctx.beginPath(); ctx.arc(gx(p2.b2), gy(p2.ykin), 2.0, 0, 7); ctx.fill();
+  });
+  const sp = pts.find(p2 => p2.sid === gnl.sel);
+  if (sp){
+    ctx.strokeStyle = "rgba(237,232,220,.95)"; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.arc(gx(sp.b2), gy(sp.ykin), 6, 0, 7); ctx.stroke();
+  }
+  ctx.fillStyle = "rgba(237,232,220,.5)"; ctx.font = "10px 'IBM Plex Mono', monospace";
+  ctx.fillText("\u03B3\u22121 vs \u03B2\u00B2 \u00B7 145 online + ground \u00B7 teal \u2212\u00BD \u00B7 amber \u2212\u2153 \u00B7 dashed = OLS \u00B7 slope " + f.co[1].toFixed(4) + " \u00B7 \u25CB selected", px + 8, 16);
+});
+animate(document.getElementById("gnTeleCanvas"), (ctx, w, h, t) => {
+  ctx.clearRect(0, 0, w, h);
+  const H = gnl.hist || {};
+  ctx.font = "9px 'IBM Plex Mono', monospace";
+  const keys = Object.keys(gnl.SYS);
+  keys.forEach((k, ci) => {
+    const hh = H[k];
+    if (!hh || hh.length < 2) return;
+    let mn = Infinity, mx = -Infinity;
+    hh.forEach(v => { if (v < mn) mn = v; if (v > mx) mx = v; });
+    if (mx - mn < 1e-16){ mn -= 1e-13; mx += 1e-13; }
+    ctx.strokeStyle = gnl.SYS[k][1]; ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    hh.forEach((v, i) => {
+      const x = 8 + i/139*(w - 108);
+      const y = h - 8 - (v - mn)/(mx - mn)*(h - 22);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.fillStyle = gnl.SYS[k][1];
+    ctx.fillText(k + " " + hh[hh.length - 1].toExponential(2), w - 98, 11 + ci*13);
+  });
+  ctx.fillStyle = "rgba(237,232,220,.4)";
+  ctx.fillText("\u27E8\u03B2\u00B2\u27E9 telemetry \u00B7 per-system mean \u00B7 per-trace scale", 8, 12);
+});
+
+/* ============ VI: THE ORBIT SOLVER ============
+   Nothing preset but physical constants. For a circular orbit at radius r around a
+   body of GM (Earth default; slide GM for any body), with ground clock at R_g:
+     SR rate  = -v^2/2c^2,  v = sqrt(GM/r)
+     GR rate  = +(GM/c^2)(1/R_g - 1/r)
+   Net drift derived in us/day. The famous cancellation altitude — where the two
+   effects null — is FOUND by bisection at every update, not remembered. */
+const ORB = {
+  c: 2.99792458e8, Rg: 6.371e6,
+  el: { alt: document.getElementById("gnAlt"), altOut: document.getElementById("gnAltOut"),
+        gm: document.getElementById("gnGM"), gmOut: document.getElementById("gnGMOut"),
+        out: document.getElementById("gnOrbOut") },
+  net(altKm, GM){
+    const r = this.Rg + altKm*1e3, c2 = this.c*this.c;
+    const sr = -GM/(2*r*c2);                      /* -v^2/2c^2 */
+    const gr = (GM/c2)*(1/this.Rg - 1/r);
+    return sr + gr;                                /* fractional rate, orbit vs ground */
+  },
+  crossover(GM){
+    let lo = 200, hi = 40000;
+    if (this.net(lo, GM) > 0 || this.net(hi, GM) < 0) return null;
+    for (let i = 0; i < 60; i++){
+      const mid = (lo + hi)/2;
+      (this.net(mid, GM) < 0) ? lo = mid : hi = mid;
+    }
+    return (lo + hi)/2;
+  },
+  upd(){
+    const altKm = +this.el.alt.value;
+    const GM = +this.el.gm.value * 1e13;
+    this.el.altOut.textContent = altKm.toLocaleString() + " km";
+    this.el.gmOut.textContent = (+this.el.gm.value).toFixed(2) +
+      (Math.abs(+this.el.gm.value - 39.86) < 0.5 ? " \u00B7 Earth" :
+       Math.abs(+this.el.gm.value - 4.28) < 0.5 ? " \u00B7 Mars" :
+       Math.abs(+this.el.gm.value - 32.49) < 0.6 ? " \u00B7 Venus" : "");
+    const r = this.Rg + altKm*1e3, v = Math.sqrt(GM/r);
+    const net = this.net(altKm, GM);
+    const usDay = net*86400*1e6;
+    const xo = this.crossover(GM);
+    this.el.out.innerHTML =
+      "v = " + (v/1e3).toFixed(3) + " km/s \u00B7 SR " + (-GM/(2*r*this.c*this.c)*86400*1e6).toFixed(2) +
+      " \u00B7 GR +" + ((GM/(this.c*this.c))*(1/this.Rg - 1/r)*86400*1e6).toFixed(2) +
+      " \u2192 net <b>" + (usDay >= 0 ? "+" : "") + usDay.toFixed(2) + " \u00B5s/day</b>" +
+      (xo ? "<br>cancellation altitude, found by bisection: <b>" + Math.round(xo).toLocaleString() + " km</b>" +
+        (Math.abs(altKm - xo) < 120 ? " \u2014 you are on the null" : "") : "");
+    /* feed the derived beta into the existing chart/compendium machinery */
+    const b = v/this.c;
+    const vr = document.getElementById("gnVR");
+    if (vr){ vr.value = Math.log10(b).toFixed(3); vr.dispatchEvent(new Event("input")); }
+  }
+};
+["alt","gm"].forEach(k => ORB.el[k].addEventListener("input", () => ORB.upd()));
+ORB.upd();
+
+})();
+</script>
+
+</body>
+</html>
