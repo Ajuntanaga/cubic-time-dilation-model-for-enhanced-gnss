@@ -18,6 +18,23 @@ directly connected to it, so the two can be versioned together.
   directly in a browser, no build step.
 - `Module_VI_Manual.md` — a plain-text companion to the HTML above, covering the same material as
   prose for reading without a browser.
+- `Cubic_Time_Dilation_Model_for_Enhanced_GNSS_2nd_edition_revised.pdf` — the 2nd edition. Twelve
+  editorial passes over the original, each checked against a small Python backend
+  (`scripts/gnss_model.py`) rather than against internal consistency alone: GPS orbital elements
+  via Kepler's third law, the standard SR+GR weak-field rate offset (reproducing Ashby 2003's
+  38.6 μs/day), the ICD-GPS-200 periodic eccentricity correction, and the GR-vs-cubic correction
+  split that reproduces Module VI's own published 263 ns (QZS-7) and 36 ns (QZS-2) figures. The
+  revision keeps the original's structure and findings where they hold and documents, in place,
+  what it corrects: a factor-of-3 arithmetic error in the original's own worked example, an
+  unverifiable "1,000 simulations" claim replaced with a reproducible degeneracy analysis, and the
+  same cube-root-exponent exclusion already established for Module XI and the QM paper.
+- `scripts/gnss_model.py`, `scripts/test_gnss_model.py` — the verification backend and its test
+  suite (14 tests), each one checked against a real, citable published number rather than only
+  against the paper's own internal arithmetic. Run with `pytest scripts/test_gnss_model.py -q`
+  from the repo root.
+- `data/satdb.csv` — the 145-satellite orbital-element database (semi-major axis, eccentricity,
+  inclination) extracted from Module VI's own embedded HTML/JS, used as the backend's real input
+  data.
 
 ## Status
 
