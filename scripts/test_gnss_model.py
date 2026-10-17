@@ -88,14 +88,20 @@ def test_cubic_model_gives_a_different_sr_only_slowdown():
 
 
 def test_taylor_expansion_matches_closed_form_at_second_order():
-    """The module's own second-order expansion arithmetic, done once here and checked
-    against the exact closed form, rather than re-derived by hand per satellite as the
-    original paper does ten times over."""
-    beta2 = 1.5e-10
+    """The module's own second-order expansion arithmetic, checked against the exact
+    closed form at a beta^2 large enough (1e-4, not GPS-scale ~1e-10) that truncation
+    order is actually distinguishable -- at GPS scale, even the order=0 constant
+    approximation is already within a 1e-10 relative tolerance of the exact value,
+    which would let a broken `order` parameter or the wrong exponent pass silently."""
+    beta2 = 1e-4
     exact = (1 - beta2) ** 0.5
-    approx2 = taylor_expand(beta2, 0.5, order=2)
-    # at this tiny beta^2, 2nd order should already match the exact value to >12 digits
-    assert approx2 == pytest.approx(exact, rel=1e-10)
+    err0 = abs(taylor_expand(beta2, 0.5, order=0) - exact)
+    err1 = abs(taylor_expand(beta2, 0.5, order=1) - exact)
+    err2 = abs(taylor_expand(beta2, 0.5, order=2) - exact)
+    assert err2 < 1e-11
+    assert err2 < err1 < err0, "higher order must be strictly more accurate"
+    wrong_exponent_err = abs(taylor_expand(beta2, 1 / 3, order=2) - exact)
+    assert wrong_exponent_err > 1e-6, "the wrong exponent must not pass this test"
 
 
 def test_taylor_expansion_converges_with_order():
@@ -195,15 +201,19 @@ def test_quadrupole_strain_matches_gw150914_order_of_magnitude():
     two black holes of ~36 and ~29 solar masses, merging at ~410 Mpc, with a peak strain
     around 1.0e-21 near 150 Hz (the frequency rising toward merger from ~35 Hz). The leading
     Newtonian quadrupole formula is not expected to be precise this close to merger (that
-    regime needs full numerical relativity), but should land within an order of magnitude --
-    a basic sanity check that 'where the real physics attaches' is at least roughly located
-    before using this formula for anything in the paper."""
+    regime needs full numerical relativity), but the paper reports this specific formula
+    gives h=2.13e-21 (chirp mass 28.1 solar masses); pinned to that value with a tight
+    tolerance, rather than the 100x window this test previously used, which would have
+    passed even for a formula wrong by an order of magnitude."""
     Mpc_to_m = 3.0857e22
+    m1, m2 = solar_mass_kg(36), solar_mass_kg(29)
+    chirp_mass_solar = (m1 * m2) ** (3 / 5) / (m1 + m2) ** (1 / 5) / solar_mass_kg(1)
+    assert chirp_mass_solar == pytest.approx(28.1, abs=0.05)
     h = binary_inspiral_strain_amplitude(
-        m1_kg=solar_mass_kg(36), m2_kg=solar_mass_kg(29),
-        f_gw_hz=150.0, distance_m=410 * Mpc_to_m,
+        m1_kg=m1, m2_kg=m2, f_gw_hz=150.0, distance_m=410 * Mpc_to_m,
     )
-    assert 1e-22 < h < 1e-20, f"got {h:.3e}, expected order 1e-21 (GW150914 peak ~1.0e-21)"
+    assert h == pytest.approx(2.13e-21, rel=0.01), f"got {h:.3e}, expected 2.13e-21"
+    assert 1.5e-21 < h < 2.5e-21, "within ~2x of LIGO's quoted peak strain ~1.0e-21"
 
 
 if __name__ == "__main__":

@@ -8,10 +8,13 @@ the standard Lorentz factor, tested against the full operational GNSS constellat
 **Status.** Both this module's own gravitational-clock measurement (Module XI) and an independent
 atomic measurement (*Cubic Time Dimensions in Quantum Mechanics*, 2nd ed. revised, §7.1) have since
 excluded the cube-root exponent as a literal clock law, in both the kinematic and gravitational
-channels. The module and this manual are published as-is, unchanged from their original form; the
-status callout on the live page states the exclusion directly, and the exponent's one remaining
-legitimate home — strong-field radiated power, not a clock rate — is documented in the compendium's
-*Where Cubic Time Lives* note.
+channels. The module's physics claims and conclusions are unchanged from the original compendium
+module; the status callout on the live page states the exclusion directly, and the exponent's one
+remaining theoretical (not yet experimentally confirmed) recurrence — in an untested quantum limit
+of strong-field radiated power, not a clock rate — is documented in the compendium's *Where Cubic
+Time Lives* note. The module has since received formatting and bug fixes (layout, a live-updating
+header equation, a corrected satellite speed, and a fixed pseudorandom generator in the noise
+demonstration) that do not change any of its numbers or claims.
 
 Generated 2026-10-17 from the Compendium fork, ported from the full compendium's `Manual.md`.
 Equation names below are pointers back to the live page; the LaTeX itself renders only there.
@@ -22,7 +25,7 @@ Equation names below are pointers back to the live page; the LaTeX itself render
 
 > The Lorentz factor, *taken to the cube root*
 
-The GNSS proposal replaces the traditional exponent −1/2 with −1/3, validated across 1,000 simulations against live constellation data. At satellite speeds the models differ by parts in 10^11 — exactly the regime where nanoseconds become meters of position error. Push the slider relativistic and watch the two models tear apart.
+The GNSS proposal replaced the traditional exponent −1/2 with −1/3, originally claimed on the strength of 1,000 simulations against live constellation data — a claim excluded by independent measurement elsewhere in this project (status above). At satellite speeds the models differ by parts in 10^11 — exactly the regime where nanoseconds become meters of position error. Push the slider relativistic and watch the two models tear apart.
 
 The array is **every operational GNSS satellite**: 145 birds across GPS (G), GLONASS (R), Galileo (E), BeiDou (C), QZSS (J) and NavIC (I), RINEX letters and all, from the live SATCAT (OPS status "+"; snapshot epoch stamped in the source line; geometry a, e, i MEASURED from apsides and period). Orbital phases are ASSUMED until *Fetch live almanac* succeeds, when CelesTrak epochs and mean anomalies make them MEASURED; propagation is two-body Kepler (ASSUMED — honest for r, v, β; not for sky position). The five regression forms now interrogate the real array; BeiDou's GEO/IGSO/MEO spread plus ground stations breaks the β²/Φ degeneracy inside the data itself. The per-satellite card carries the framework's sharpest non-arbitrary discriminator: the **eccentricity clock correction**, Δt = −(1+2k)/2 · 2√(μa) e sin E / c² — the periodic term every receiver measures and applies. Its coefficient is *derived*: GR's k = ½ gives 1; the cubic k = ⅓ gives 5/6 — a 17% amplitude split, 36 ns on QZS-2's e = 0.075 orbit. The module can say no, satellite by satellite. The array's strongest lever is larger still and needs its caveat stated: **QZS-7** is catalogued at e = 0.721, which puts the split at **263 ns** — seven times QZS-2's. That is a *transfer* orbit, not an operational one, so the figure is real but temporary; it shrinks to the QZS-2 value once the bird is on station. Worth knowing in both directions: while it is climbing it is the sharpest discriminator in the constellation, and any fit that leans on it is leaning on a number with an expiry date.
 
