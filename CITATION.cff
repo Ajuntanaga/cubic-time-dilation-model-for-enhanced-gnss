@@ -21,6 +21,12 @@ authors:
     given-names: "Anthony M."
 identifiers:
   - type: doi
+    value: 10.5281/zenodo.23436711
+    description: "Concept DOI -- always resolves to the latest version on Zenodo"
+  - type: doi
+    value: 10.5281/zenodo.23443208
+    description: "Archived snapshot of version v1.1.0 on Zenodo"
+  - type: doi
     value: 10.5281/zenodo.23436712
     description: "Archived snapshot of version v1.0.0 on Zenodo"
 repository-code: "https://github.com/Ajuntanaga/cubic-time-dilation-model-for-enhanced-gnss"
