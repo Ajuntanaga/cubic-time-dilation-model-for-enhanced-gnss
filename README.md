@@ -27,7 +27,10 @@ directly connected to it, so the two can be versioned together.
   revision keeps the original's structure and findings where they hold and documents, in place,
   what it corrects: a factor-of-3 arithmetic error in the original's own worked example, an
   unverifiable "1,000 simulations" claim replaced with a reproducible degeneracy analysis, and the
-  same cube-root-exponent exclusion already established for Module XI and the QM paper.
+  same cube-root-exponent exclusion already established for Module XI and the QM paper. A follow-up
+  independent review (v1.1.0) found and fixed further issues in the revision itself: a claimed
+  derivation that wasn't actually in the text it pointed to, exclusion evidence misdated as newer
+  than the original proposal, and a degeneracy argument that overstated its own conclusion.
 - `scripts/gnss_model.py`, `scripts/test_gnss_model.py` — the verification backend and its test
   suite (14 tests), each one checked against a real, citable published number rather than only
   against the paper's own internal arithmetic. Run with `pytest scripts/test_gnss_model.py -q`
@@ -42,9 +45,12 @@ Both this module's own gravitational-clock measurement (Module XI) and an indepe
 measurement (*Cubic Time Dimensions in Quantum Mechanics*, 2nd edition revised, §7.1 —
 [github.com/Ajuntanaga/cubic-time-dimensions-in-quantum-mechanics](https://github.com/Ajuntanaga/cubic-time-dimensions-in-quantum-mechanics))
 have since excluded the cube-root exponent as a literal clock law, in both the kinematic and
-gravitational channels. This repository preserves the original 2024 proposal and its module
-unchanged; the correction is documented on the live page itself (the status callout at the top of
-Module VI) and in the companion manual, not retrofitted into the proposal text.
+gravitational channels. This repository preserves the original 2024 proposal's claims unchanged;
+the correction is documented on the live page itself (the status callout at the top of Module VI)
+and in the companion manual, not retrofitted into the proposal text. Module VI has since received
+formatting and bug fixes (layout, a live-updating header equation, a corrected satellite speed, and
+a fixed pseudorandom generator in the noise demonstration) that do not change any of its physics
+claims or published numbers.
 
 ## Provenance
 

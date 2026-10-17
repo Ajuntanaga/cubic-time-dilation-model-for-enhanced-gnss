@@ -1,6 +1,6 @@
 {
   "title": "Cubic Time Dilation Model for Enhanced GNSS",
-  "description": "\"Cubic Time Dilation Model for Enhanced GNSS Accuracy and Security\" (proposal, September 2024), together with Module VI (\"Cubic time dilation\") extracted standalone from the Chronowave Dynamics Temporal Engine compendium — the module that embodies the proposal's (1-β²)^(-1/3) exponent and its 1,000-simulation validation against the operational GNSS constellation.",
+  "description": "\"Cubic Time Dilation Model for Enhanced GNSS Accuracy and Security\" (proposal, September 2024) and its 2nd-edition revision, together with Module VI (\"Cubic time dilation\") extracted standalone from the Chronowave Dynamics Temporal Engine compendium. The original proposed replacing the traditional Lorentz exponent -1/2 with a cube-root exponent -1/3 on the strength of 1,000 simulations against live constellation data; the 2nd edition documents that this exponent has since been excluded by independent measurement and verifies every remaining claim against a Python backend checked against published values (Ashby 2003, ICD-GPS-200). v1.1.0 fixes issues an independent review found in the revision itself, including a misdated chronology of the exclusion evidence and an overstated degeneracy argument.",
   "creators": [
     {
       "name": "Vargas, Anthony M."
