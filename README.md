@@ -1,5 +1,8 @@
 # Cubic Time Dilation Model for Enhanced GNSS
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23436712.svg)](https://doi.org/10.5281/zenodo.23436712)
+[![DOI badge check](https://github.com/Ajuntanaga/cubic-time-dilation-model-for-enhanced-gnss/actions/workflows/doi-badge-check.yml/badge.svg)](https://github.com/Ajuntanaga/cubic-time-dilation-model-for-enhanced-gnss/actions/workflows/doi-badge-check.yml)
+
 This repository tracks the GNSS proposal and the Chronowave Dynamics compendium module most
 directly connected to it, so the two can be versioned together.
 
@@ -32,6 +35,10 @@ Module VI was extracted from a larger single-file compendium (17 modules in one 
 tracing which interactive elements and JavaScript the module actually depends on, since the source
 file's script isn't organized per module. Verified via a headless Node.js harness: the extracted
 script parses cleanly and every element ID referenced resolves.
+
+## Citation
+
+See [CITATION.cff](CITATION.cff) (also used by GitHub's "Cite this repository" button).
 
 ## License
 

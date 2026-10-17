@@ -1,0 +1,59 @@
+name: DOI badge check
+
+"on":
+  push:
+    branches: [main]
+    paths:
+      - README.md
+      - .zenodo.json
+      - CITATION.cff
+  schedule:
+    - cron: "0 6 * * 1"  # weekly, Monday 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  check-doi-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract DOI from README badge
+        id: extract
+        run: |
+          doi=$(grep -oP '(?<=zenodo\.org/badge/DOI/)[^.]+\.[^)]+(?=\.svg)' README.md | head -n1)
+          if [ -z "$doi" ]; then
+            echo "::error::No DOI badge found in README.md"
+            exit 1
+          fi
+          echo "doi=$doi" >> "$GITHUB_OUTPUT"
+          echo "Found DOI in README: $doi"
+
+      - name: Check the DOI resolves
+        run: |
+          doi="${{ steps.extract.outputs.doi }}"
+          status=$(curl -sL -o /dev/null -w "%{http_code}" "https://doi.org/$doi")
+          echo "https://doi.org/$doi -> HTTP $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 400 ]; then
+            echo "::error::DOI $doi did not resolve (HTTP $status)"
+            exit 1
+          fi
+
+      - name: Check the badge image itself loads
+        run: |
+          doi="${{ steps.extract.outputs.doi }}"
+          status=$(curl -sL -o /dev/null -w "%{http_code}" "https://zenodo.org/badge/DOI/$doi.svg")
+          echo "badge image -> HTTP $status"
+          if [ "$status" -ne 200 ]; then
+            echo "::error::DOI badge image failed to load (HTTP $status)"
+            exit 1
+          fi
+
+      - name: Cross-check DOI against CITATION.cff
+        run: |
+          doi="${{ steps.extract.outputs.doi }}"
+          cff_doi=$(grep -A2 'type: doi' CITATION.cff | grep 'value:' | sed 's/.*value: *//' | tr -d '"' | head -n1)
+          if [ "$doi" != "$cff_doi" ]; then
+            echo "::error::README badge DOI ($doi) does not match CITATION.cff ($cff_doi) — update whichever is stale."
+            exit 1
+          fi
+          echo "README and CITATION.cff agree on DOI: $doi"
