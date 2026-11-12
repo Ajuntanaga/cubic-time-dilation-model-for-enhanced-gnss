@@ -88,7 +88,13 @@ canvas.viz{display:block;width:100%;height:auto;background:radial-gradient(120% 
 
 /* controls */
 .controls{display:flex;flex-wrap:wrap;gap:20px 30px;padding:18px 20px;border-top:1px solid var(--hairline)}
-.ctrl{min-width:170px;flex:1}
+/* The basis carries the 170px, not min-width: `.controls .ctrl{min-width:0}` further down (the phone fix)
+   cancels the minimum at every width, and with flex:1's zero basis a slider then never forces a wrap. It
+   shrank to 11px beside its neighbours instead. */
+.ctrl{min-width:170px;flex:1 1 170px}
+/* .ctrl label and .panel-head are upper-cased, which also turns gamma into Gamma and 1.29e-5 into 1.29E-5.
+   Symbols and live readouts keep their case. */
+.sym, .panel-head .readout{text-transform:none}
 .ctrl.narrow{min-width:130px;flex:0 1 180px}
 .ctrl label{display:flex;justify-content:space-between;gap:8px;font-family:var(--grot);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:8px}
 .ctrl label output{font-family:var(--mono);color:var(--amber);letter-spacing:0;text-transform:none;white-space:nowrap}
@@ -452,7 +458,7 @@ kbd{font-family:var(--mono);font-size:10px;color:var(--cyan);border:1px solid va
         </div>
         <div class="ctrl narrow">
           <label for="gnGM">body GM &times;10<sup>13</sup> m&sup3;/s&sup2; <output id="gnGMOut">39.86 &middot; Earth</output></label>
-          <input type="range" id="gnGM" min="2" max="130" step="0.5" value="39.86">
+          <input type="range" id="gnGM" min="2" max="130" step="0.01" value="39.86">
         </div>
         <div class="ctrl narrow" style="flex:1 1 100%">
           <div class="readout" id="gnOrbOut" style="line-height:1.7">&mdash;</div>
@@ -524,8 +530,9 @@ kbd{font-family:var(--mono);font-size:10px;color:var(--cyan);border:1px solid va
       fragile part and the least important: vis-viva makes &beta;&sup2; and &Phi; affinely dependent at fixed
       semi-major axis, so rotating every satellite's phase through a full turn moves k&#770; by at most
       1.8&times;10<sup>&minus;7</sup> &mdash; live data would not improve the measurement. The near-degeneracy
-      between &beta;&sup2; and &Phi; (r&nbsp;=&nbsp;0.968) is broken by adding ground stations, confirmed by both a
-      correlation and an independent error-ratio check.</p>
+      between &beta;&sup2; and &Phi; (r&nbsp;&asymp;&nbsp;0.97; the panel reads it live, and it drifts as the
+      eccentric birds go round) is broken by adding ground stations, confirmed by both a correlation and an
+      independent error-ratio check.</p>
   </div>
 </section>
 
@@ -1059,6 +1066,12 @@ gnl.run = function(){
     const rSat = this.collin(pts.filter(p => p.sid >= 0));
     const rAll = this.collin(pts);
     const vifS = 1/Math.max(1e-9, 1 - rSat*rSat), vifA = 1/Math.max(1e-9, 1 - rAll*rAll);
+    /* OLS: SE(k-hat) = sigma/sqrt(Sxx(1 - r^2)), Sxx the sum of squares of beta^2 about its mean.
+       The old caption used sqrt(VIF/n) and so left out the spread: it predicted 2.8x where 300
+       resamples at each noise level measure 6.0x. With Sxx in, the prediction is the measurement. */
+    const sxx = rows => { let m = 0, s = 0; for (const r of rows) m += r.b2; m /= rows.length;
+                          for (const r of rows) s += (r.b2 - m)*(r.b2 - m); return s; };
+    const spread = sxx(pts)/Math.max(1e-300, sxx(pts.filter(p => p.sid >= 0)));
     nowEl.innerHTML =
       "propagation: two-body Kepler (ASSUMED) \u00B7 grav channel coefficient \u22121 (ASSUMED) \u00B7 " +
       "ecc-correction coefficient (1+2k)/2 DERIVED" +
@@ -1079,16 +1092,15 @@ gnl.run = function(){
       " \u2014 and it does not matter for k. What separates \u03B2\u00B2 from \u03A6 is the GM/ac\u00B2 offset: different shells, " +
       "and the ground stations at an <i>a</i> no satellite has. Live phases change only the eccentricity card's " +
       "\u201Cnow\u201D line." +
-      "<br>OLS puts the standard error of a coefficient at \u221A(VIF/n), so dropping the ground stations should " +
-      "cost a factor <b>\u221A(" + vifS.toPrecision(3) + "/" + vifA.toPrecision(3) + " \u00B7 " + pts.length + "/" +
-      pts.filter(p => p.sid >= 0).length + ") = " +
-      Math.sqrt((vifS/vifA)*(pts.length/Math.max(1, pts.filter(p => p.sid >= 0).length))).toPrecision(3) +
-      "</b> in precision on k (approximate: it assumes the predictor spread is otherwise comparable between the " +
-      "two fits, which is not exact once very different ground-station points are added). The satellites-only row " +
-      "in the table is that cost being collected: it is consistently less precise than the full fit, by roughly " +
-      "this order of magnitude, and at the noise levels reachable with this slider it has not lost the ability " +
-      "to pick the right model, only the margin by which it does. The degeneracy is not an argument in the " +
-      "caption, it is a row you can watch get less confident.";
+      "<br>OLS puts the standard error of a coefficient at \u03C3/\u221A(S\u00B7(1\u2212r\u00B2)), with S the predictor's sum of " +
+      "squares about its mean, so dropping the ground stations should cost a factor <b>\u221A(" + vifS.toPrecision(3) + "/" +
+      vifA.toPrecision(3) + " \u00B7 " + spread.toPrecision(3) + ") = " + Math.sqrt((vifS/vifA)*spread).toPrecision(3) +
+      "</b> in precision on k: the first ratio is the collinearity, the second is the stations being most of the " +
+      "spread in \u03B2\u00B2 as well. The satellites-only row in the table is that cost being collected. Resample and " +
+      "its k\u0302 scatters by that factor more than the full fit's, at every noise level. At the default \u03C3 it still " +
+      "picks GR on every draw; at the slider's top, \u03C3 = 8 ps, it calls cubic on roughly one draw in eight while " +
+      "the full fit does not miss. The degeneracy is not an argument in the caption, it is a row you can watch " +
+      "get less confident.";
   }
   this.pts = pts;
   this.renderSat();

@@ -48,9 +48,13 @@ have since excluded the cube-root exponent as a literal clock law, in both the k
 gravitational channels. This repository preserves the original 2024 proposal's claims unchanged;
 the correction is documented on the live page itself (the status callout at the top of Module VI)
 and in the companion manual, not retrofitted into the proposal text. Module VI has since received
-formatting and bug fixes (layout, a live-updating header equation, a corrected satellite speed, and
-a fixed pseudorandom generator in the noise demonstration) that do not change any of its physics
-claims or published numbers.
+formatting and bug fixes (layout, a live-updating header equation, a corrected satellite speed, a
+fixed pseudorandom generator in the noise demonstration, and a corrected standard-error formula in
+that demonstration's caption) that do not change any of its physics claims or its published
+satellite-clock figures (263 ns for QZS-7, 36 ns for QZS-2). What they do correct is the noise
+demonstration's own numbers: dropping the ground stations costs about 6× in precision, not the
+earlier ≈2.8× (the old caption formula left out a spread term), and the wrong-model rates are now
+measured over 300 resamples (about 12% of draws at σ = 8 ps) rather than read off one draw.
 
 ## Provenance
 
